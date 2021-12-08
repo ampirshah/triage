@@ -3,12 +3,16 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var mongoose =require('mongoose')
 var indexRouter = require('./routes/index');
+const { error } = require('console');
 
 
 var app = express();
 
+mongoose.connect('mongodb://localhost:27017/triage').catch(
+error=> console.log(error)
+);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
