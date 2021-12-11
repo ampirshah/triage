@@ -41,17 +41,6 @@ $toolbar-height:68px;
         gap: 23px;
         text-align: right;
         align-items: flex-start;
-        
-        button {
-            font-family: 'IRANSANSWeb';
-            border:none;
-            background-color: transparent;
-            cursor: pointer;
-            color: white;
-            font-size: 18px;
-            width: 100%;
-            padding: 0;
-        }
     }
     .SideBar {
         background-color: $dark-color;
@@ -69,7 +58,16 @@ $toolbar-height:68px;
     li {
         list-style: none;
     }
-    
+    button {
+        font-family: 'IRANSANSWeb';
+        border:none;
+        background-color: transparent;
+        cursor: pointer;
+        color: white;
+        font-size: 18px;
+        width: 100%;
+        padding: 0;
+    }
     .Content {
         margin-top: calc(#{$toolbar-height} - 70px) ;
         display: flex;

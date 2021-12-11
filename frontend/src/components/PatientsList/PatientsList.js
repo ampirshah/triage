@@ -1,7 +1,7 @@
 import React from 'react';
-import style from './Patients.module.scss';
+import style from './PatientsList.module.scss';
 
-const Patients = () => {
+const PatientsList = () => {
     return (
         <div className={style.Patients}>
             <table className={style.List}>
@@ -14,4 +14,4 @@ const Patients = () => {
     )
 }
 
-export default Patients
+export default PatientsList
