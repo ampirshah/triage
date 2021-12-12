@@ -2,6 +2,9 @@ import React, { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import style from './DoctorsList.module.scss';
 import Modal from '../Modal/Modal';
+import {FiEdit} from 'react-icons/fi';
+import {toPersianNumber} from '../../helpers/action';
+
 const Doctors = (props) => {
     const initialState = [{
         userId: '',
@@ -59,18 +62,15 @@ const Doctors = (props) => {
         return doctors.map((doctor, index) => {
             const { userId, id, title } = doctor;
             return <tr key={index}>
-                <td>{userId}</td>
-                <td>{id}</td>
+                <td>{toPersianNumber(userId)}</td>
+                <td>{toPersianNumber(id)}</td>
                 <td>{title}</td>
                 {/* <td className={style.EditButton}>
                         <button onClick={() => removeData(id)}>حذف</button>
                     </td> */}
-                {/* <td>
-                        <input onChange={(event)=>stateChangedHandler(event.target.value,id)} />
-                    </td> */}
+
                 <td className={style.EditButton}>
-                    {/* <button onClick={()=>editHandler(id)}>ویرایش</button> */}
-                    <button onClick={() => openEditModal(index)}>ویرایش</button>
+                    <button onClick={() => openEditModal(index)}><FiEdit/></button>
                 </td>
             </tr>
         })
@@ -96,6 +96,7 @@ const Doctors = (props) => {
     const openEditModal = (index) => {
         console.log("modal", index);
         setModalShow({ ...modalShow, index: index, show: true });
+        setChangedDoctor('');
     }
 
     const TableHeaderHandler = () => {
@@ -105,36 +106,47 @@ const Doctors = (props) => {
         })
     }
     console.log('doctors', doctors);
-    
+
     const [changedDoctor, setChangedDoctor] = useState(initialState)
 
-    const inputChangedHandler = (event, index) => {
-        let temp={...changedDoctor};
-        if(event.target.name==='name'){
-            temp[index].id=event.target.value;
-        }
-        if(event.target.name==='specialty'){
-            temp[index].title=event.target.value;
-        }
-        setChangedDoctor(temp);
-        console.log("changed",changedDoctor);
+    const inputChangedHandler = (event) => {
+
+        setChangedDoctor({
+            ...changedDoctor,
+            [event.target.name]: event.target.value
+        });
+        // let temp={...changedDoctor};
+        // if(event.target.name==='name'){
+        //     temp[index].id=event.target.value;
+        // }
+        // if(event.target.name==='specialty'){
+        //     temp[index].title=event.target.value;
+        // }
+        // setChangedDoctor(temp);
+        console.log("changed", changedDoctor);
     }
 
     const submitChangesHandler = (event, index) => {
         event.preventDefault();
-        setDoctors({...doctors,doctors:changedDoctor});
-        const data = {
-            userId: doctors[index].userId,
-            id: doctors[index].id,
-            title: doctors[index].title,
-            body: doctors[index].body
-        }
+        let temp = [...doctors];
+        temp[index].id = changedDoctor.id;
+        temp[index].title = changedDoctor.title;
+        setDoctors(temp);
+        console.log("after Changed :", doctors);
+
+         const data = doctors
+        // {
+        //     userId: doctors.userId,
+        //     id: doctors.id,
+        //     title: doctors.title,
+        //     body: doctors.body
+        // }
 
         console.log("data:", data);
         axios.post('https://jsonplaceholder.typicode.com/posts', data)
             .then(response => {
-                console.log("Response", response)
-                setModalShow({...modalShow,show:false})
+                console.log("Response", response.data)
+                setModalShow({ ...modalShow, show: false })
             })
             .catch(error => console.log("Erorr", error))
 
@@ -144,17 +156,18 @@ const Doctors = (props) => {
 
     return (
         <Fragment>
-            {modalShow.show ? <Modal doctors={doctors} CloseModal={() => setModalShow({...modalShow,show:false})}>
+            {modalShow.show ? <Modal doctors={doctors} CloseModal={() => setModalShow({ ...modalShow, show: false })}>
 
-                <div>
+                <form className={style.TriageModal} onSubmit={(event) => submitChangesHandler(event, modalShow.index)}>
                     <label>ویرایش نام پزشک:
-                        <input type='text' onChange={(event) => inputChangedHandler(event,modalShow.index)} name='name' value={doctors[modalShow.index].id} />
+                        <input type='text' onChange={(event) => inputChangedHandler(event)} name='id' placeholder={doctors[modalShow.index].id} />
                     </label>
                     <label>ویرایش تخصص:
-                        <input type='text' onChange={(event) => inputChangedHandler(event,modalShow.index)} name='specialty' value={doctors[modalShow.index].title} />
+                        <input type='text' onChange={(event) => inputChangedHandler(event)} name='title' placeholder={doctors[modalShow.index].title} />
                     </label>
-                    <button type='submit' onClick={(event) => submitChangesHandler(event, modalShow.index)}>دکمه</button>
-                </div>
+                    <button type='submit'>ثبت تغییرات</button>
+                </form>
+
             </Modal> : null}
             <div className={style.Doctors}>
 

@@ -8,8 +8,10 @@ function App() {
   return (
     <div className={style.App}>
       <Routes>
-        <Route path='/' element={<Triage />} />
+        <Route path='/' element={<Navigate replace to="/Triage" />} />
+        <Route path='/Triage' element={<Triage />} />
         <Route path='/Doctor' element={<Doctor />} />
+        
         {/* <Route path='/' element={<Navigate to='/Triage/' />} /> */}
         {/* <Route path="/" element={<Triage />} />
         <Route path="/:id" element={<About />} /> */}

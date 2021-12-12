@@ -3,45 +3,28 @@ import axios from 'axios'
 import { Link } from 'react-router-dom';
 import DoctorsList from '../../components/DoctorsList/DoctorsList';
 import PatientsList from '../../components/PatientsList/PatientsList';
-
+import {RiHealthBookLine} from 'react-icons/ri';
+import {MdOutlineSick} from 'react-icons/md';
 import style from './Triage.module.scss';
 
+import Container from '../../hoc/Container/Container';
 const Triage = () => {
     const [isShown, setIsShown] = useState({
         doctors: false,
         patients: false,
     })
-    
-    
-    
+    let MenuButtons=<div>
+        <li><button onClick={() => setIsShown({ doctors: true, patients: false })}><RiHealthBookLine/>لیست پزشکان </button></li>
+                <li><button onClick={() => setIsShown({ doctors: false, patients: true })}><MdOutlineSick/>لیست بیماران</button></li>
+    </div>
+    let NavLink=<Link to='/Doctor'>پزشک هستید؟</Link>
     return (
-        <div className={style.Container}>
-            <div className={style.Toolbar}>
-                <div>
-                    <h1>نام سایت</h1>
-                </div>
-                <div className={style.User}>
-                    <p>یه چیزی</p>
-                </div>
-
-            </div>
-            <div className={style.Dashboard}>
-                <div className={style.SideBar}>
-                    <div>
-                        <ul className={style.Menu}>
-                            <li><button onClick={() => setIsShown({ doctors: true, patients: false })}>لیست پزشک ها</button></li>
-                            <li><button onClick={() => setIsShown({ doctors: false, patients: true })}>لیست بیماران</button></li>
-
-                        </ul>
-                    </div>
-                </div>
-                <div className={style.Content}>
-                    {/* <button onClick={submitChangesHandler}>دکمه</button> */}
-                    {isShown.doctors ? <DoctorsList  /> : null}
-                    {isShown.patients ? <PatientsList /> : null}
-                </div>
-            </div>
-        </div>
+        <Container MenuButtons={MenuButtons} Link={NavLink} Title='تریاژ'>
+           
+            {isShown.doctors ? <DoctorsList  /> : null}
+            {isShown.patients ? <PatientsList /> : null}
+        </Container>
+        
     )
 
 }

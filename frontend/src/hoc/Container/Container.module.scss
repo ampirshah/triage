@@ -1,58 +1,99 @@
-// $background-color: #9c88ff;
-// $dark-color: #4d4380;
+$background-color: #9c88ff;
+$dark-color: #4d4380;
+$toolbar-height: 68px;
 
-// .Container {
-//     h1 {
-//         color: $dark-color;
-//         margin: 0;
-//         padding: 0;
-//         font-size: 25px;
-//     }
-//     .User {
-//         margin: 0;
-//         padding: 0;
-//         font-size: 17px;
-//     }
-//     .Toolbar {
-//         height: 65px;
-//         background-color: $background-color;
-//         padding: 0 25px;
-//         display: flex;
-//         flex-direction: row;
-//         align-items: center;
-//         justify-content: space-between;
-//     }
-// }
-// .Dashboard {
-//     display: flex;
-//     flex-direction: row;
-    
-//     .Menu {
-//         margin-top: 25px;
-//         width: 100%;
-//     }
-//     .SideBar {
-//         background-color: $dark-color;
-//         width: 230px;
-//         height: 100vh;
-//         color: white;
-//         display: flex;
-//         flex-direction: column;
-//         align-items: center;
-//     }
-//     ul {
-//         margin: 0;
-//         padding: 0;
-//     }
-//     li {
-//         font-size: 17px;
-//         width: 100%;
-//         list-style: none;
-//     }
-//     .Content {
-//         display: flex;
-//         width: 100%;
-//         justify-content: center;
-//         align-items: center; //?
-//     }
-// }
+.Container {
+    h1 {
+        color: $dark-color;
+        margin: 0;
+        padding: 0 20px;
+        font-size: 26px;
+    }
+    .User {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: row;
+        gap: 40px;
+        align-items: center;
+        a {
+            font-size: 14px;
+            text-decoration: none;
+            color: #2c2c2c;
+        }
+    }
+    .Toolbar {
+        height: 68px;
+        background-color: $background-color;
+        padding: 0 42px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom-right-radius: 25px;
+        border-bottom-left-radius: 25px;
+        position: fixed;
+        left: 0;
+        right: 0;
+    }
+}
+.Dashboard {
+    display: flex;
+    flex-direction: row;
+
+    .Menu {
+        margin-top: calc(#{$toolbar-height} + 50px);
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 23px;
+        text-align: right;
+        align-items: flex-start;
+
+        button {
+            font-family: "IRANSANSWeb";
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+            width: 100%;
+            padding: 0;
+            display: flex;
+            flex-flow: row;
+            gap: 5px;
+            align-items: center;
+        }
+    }
+    .SideBar {
+        background-color: $dark-color;
+        width: 250px;
+        height: 100vh;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        div {
+            display: flex;
+            flex-direction: column;
+            gap: 27px;
+        }
+    }
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+    li {
+        list-style: none;
+    }
+
+    .Content {
+        margin-top: calc(#{$toolbar-height} - 70px);
+        display: flex;
+        flex-flow: column;
+        width: 100%;
+        justify-content: center;
+        align-items: center; //?
+    }
+}
