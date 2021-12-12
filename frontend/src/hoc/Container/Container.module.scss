@@ -1,7 +1,7 @@
 $background-color: #9c88ff;
 $dark-color: #4d4380;
 $toolbar-height: 68px;
-
+$sidebar-width:250px;
 .Container {
     h1 {
         color: $dark-color;
@@ -35,65 +35,88 @@ $toolbar-height: 68px;
         position: fixed;
         left: 0;
         right: 0;
+        z-index: 40;
     }
-}
-.Dashboard {
-    display: flex;
-    flex-direction: row;
-
-    .Menu {
-        margin-top: calc(#{$toolbar-height} + 50px);
-        width: 100%;
+    .Dashboard {
         display: flex;
-        flex-direction: column;
-        gap: 23px;
-        text-align: right;
-        align-items: flex-start;
+        flex-direction: row;
 
-        button {
-            font-family: "IRANSANSWeb";
-            border: none;
-            background-color: transparent;
-            cursor: pointer;
+        .SideBar {
+            background-color: $dark-color;
+            width: $sidebar-width;
+            height: 100vh;
             color: white;
-            font-size: 18px;
-            width: 100%;
-            padding: 0;
             display: flex;
-            flex-flow: row;
-            gap: 5px;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            z-index: 30;
+            div {
+                display: flex;
+                flex-direction: column;
+                gap: 27px;
+            }
+            .Menu {
+                margin-top: calc(#{$toolbar-height} + 50px);
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 23px;
+                text-align: right;
+                align-items: flex-start;
+
+                button {
+                    font-family: "IRANSANSWeb";
+                    border: none;
+                    background-color: transparent;
+                    cursor: pointer;
+                    color: white;
+                    font-size: 18px;
+                    width: 100%;
+                    padding: 0;
+                    display: flex;
+                    flex-flow: row;
+                    gap: 20px;
+                    align-items: center;
+                    
+                    div{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: 21px;
+                    }
+                    
+                }
+                button:hover{
+                    color: $background-color;
+                    
+                }
+                
+            }
+        }
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+        li {
+            list-style: none;
+        }
+
+        .Content {  
+            display: flex;
+            position: absolute;
+            left: 0;
+            align-items: center;
+            width: calc(100vw - #{$sidebar-width});
+            height: 100vh;
+            justify-content: center;
             align-items: center;
         }
     }
-    .SideBar {
-        background-color: $dark-color;
-        width: 250px;
-        height: 100vh;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        div {
-            display: flex;
-            flex-direction: column;
-            gap: 27px;
-        }
-    }
-    ul {
-        margin: 0;
-        padding: 0;
-    }
-    li {
-        list-style: none;
-    }
-
-    .Content {
-        margin-top: calc(#{$toolbar-height} - 70px);
-        display: flex;
-        flex-flow: column;
-        width: 100%;
-        justify-content: center;
-        align-items: center; //?
-    }
 }
+// @media only screen and (max-width:650px) {
+//     .Content{
+//         position: fixed;;
+        
+//     }
+// }

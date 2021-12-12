@@ -9,6 +9,7 @@ const Modal = (props) => {
                 <div className={style.Modal}>
                     <CgCloseR className={style.Cancel} onClick={props.CloseModal} />
                     <div className={style.ModalContent}>
+                    <h3>{props.Title}</h3>
                         {props.children}
                     </div>
                 </div>

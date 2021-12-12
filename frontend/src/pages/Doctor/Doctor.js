@@ -1,36 +1,24 @@
 import React, { useState } from 'react';
 import style from './Doctor.module.scss'
-
+import Container from '../../hoc/Container/Container';
+import { Link } from 'react-router-dom';
+import PatientsList from '../../components/PatientsList/PatientsList';
+import DoctorsList from '../../components/DoctorsList/DoctorsList';
 const Doctor = () => {
-    const [patients, setPatients] = useState([{
-        id:1,
-        name:'بیمار 1',
-    }])
+    const [isShown, setIsShown] = useState({
+        
+    })
+    let MenuButtons=<div>
+        <li><button>لیست بیماران</button></li>
+    </div>
+    let NavLink=<Link to='/Triage'>تریاژ هستید؟</Link>
     return (
-        <div className={style.Container}>
-            <div className={style.Toolbar}>
-                <div>
-                    <h1>نام سایت</h1>
-                </div>
-                <div className={style.User}>
-                    <p>یه چیزی</p>
-                </div>
-
-            </div>
-            <div className={style.Dashboard}>
-                <div className={style.SideBar}>
-                    <div>
-                        <ul className={style.Menu}>
-
-                        </ul>
-                    </div>
-                </div>
-                <div className={style.Content}>
-                    
-                </div>
-            </div>
-        </div>
+        <Container MenuButtons={MenuButtons} Link={NavLink} Title='پزشک'>
+           
+            <p>لیست بیماران</p>
+        </Container>
     )
+    
 }
 
 export default Doctor
