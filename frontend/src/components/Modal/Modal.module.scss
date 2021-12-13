@@ -9,9 +9,8 @@ $dark-color: #4d4380;
 }
 .ModalContainer {
     display: flex;
-    justify-content: center;
     align-items: center;
-    position: fixed;
+    // position: fixed;
     .Modal {
         position: fixed;
         z-index: 200;
@@ -43,6 +42,34 @@ $dark-color: #4d4380;
         }
         .ModalContent {
             width: 50%;
+            
         }
+    }
+}
+.TriageModal {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    label {
+        display: flex;
+        flex-flow: column;
+        gap: 5px;
+    }
+    input {
+        border: 1px solid $dark-color;
+        border-radius: 3px;
+        padding: 8px 14px;
+    }
+    button {
+        color: white;
+        background-color: $dark-color;
+        font-family: "IRANSansWeb";
+        border: none;
+        border-radius: 5px;
+        padding: 8px 0;
+        margin-top: 35px;
+        font-size: 16px;
+        cursor: pointer;
     }
 }

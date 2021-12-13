@@ -18,29 +18,42 @@ const Triage = () => {
     })
 
 
-    const initialState = [{
+    const initialDoctor = {
         userId: '',
         id: '',
         title: '',
         body: ''
-    }];
+    };
+    const initialPatient={
+        name:'',
+        turn:0,
+        problem:'',
+        doctor:{
+            name:'',
+            visited:false
+        },
+        isActive:true
+    };
 
-    const [doctors, setDoctors] = useState(initialState)
+    const [doctors, setDoctors] = useState([initialDoctor])
 
-    useEffect(() => {
-        axios.get('https://jsonplaceholder.typicode.com/posts')
-            .then(response => {
-                const doctorsList = response.data.slice(0, 5);
+    const [patients,setPatients]=useState([initialPatient])
+
+    // useEffect(() => {
+    //     axios.get('https://jsonplaceholder.typicode.com/posts')
+    //         .then(response => {
+    //             const doctorsList = response.data.slice(0, 5);
         
-                setDoctors(doctorsList)
-            })
-            .catch(error => console.log("Error", error))
-    }, [])
+    //             setDoctors(doctorsList)
+    //         })
+    //         .catch(error => console.log("Error", error))
+    // }, [])
 
 
 
     console.log("doctors", doctors)
-
+    console.log('patients', patients);
+    
     const [modalShow, setModalShow] = useState({
         index: 0,
         show: false,
@@ -49,51 +62,72 @@ const Triage = () => {
 
     
     const openEditModal = (index) => {
+      
         console.log("modal", index);
         setModalShow({ ...modalShow, index: index, show: true ,operation:'edit'});
         setChangedDoctor('');
+      
     }
     const openAddModal=(index)=>{
-        setModalShow({ ...modalShow, index: index, show: true,operation:'Add' });
+        setModalShow({ ...modalShow, index: index, show: true,operation:'add' });
         setChangedDoctor('');
     }
     
-    console.log('doctors', doctors);
+    
 
-    const [changedDoctor, setChangedDoctor] = useState(initialState)
+    const [changedDoctor, setChangedDoctor] = useState(initialDoctor)
+    const [changedPatient,setChangedPatient] =useState(initialPatient)
 
-    const inputChangedHandler = (event) => {
+    console.log("changedDoctor", changedDoctor);
+    
+    const inputDoctorHandler = (event,index) => {
+            console.log("[event.target.name]",event.target.name);
+            setChangedDoctor({
+                ...changedDoctor,
+                userId:doctors[0].userId,
+                [event.target.name]:event.target.value,
+                body:doctors[0].body
+            });
+           
+            console.log("changedDoctor", changedDoctor);
 
-        setChangedDoctor({
-            ...changedDoctor,
-            [event.target.name]: event.target.value
-        });
-       
-        console.log("changed", changedDoctor);
     }
 
-    const submitChangesHandler = (event, index) => {
-        event.preventDefault();
-        if(index<doctors.length){
-            let temp = [...doctors];
-            temp[index].id = changedDoctor.id;
-            temp[index].title = changedDoctor.title;
-            setDoctors(temp);
-        }else if(index==doctors.length){
-            let temp = [...doctors];
-            temp.push (changedDoctor)
-            setDoctors(temp);
-        }
-        console.log("after Changed :", doctors);
+    console.log("doctors.title", doctors.title);
 
-         const data = doctors
-        // {
-        //     userId: doctors.userId,
-        //     id: doctors.id,
-        //     title: doctors.title,
-        //     body: doctors.body
+    const inputPatientHandler=(event,index)=>{
+        setChangedPatient({
+            ...changedPatient,
+            [event.target.name]:event.target.value,
+        });
+            console.log("changedPatient", changedPatient);
+            
+        //    let temp={...changedPatient};
+        // if(event.target.name==='name'){
+        //     temp.name=event.target.value;
         // }
+        // if(event.target.name==='problem'){
+        //     temp.problem=event.target.value;
+        // }
+        //     setChangedPatient(temp); y
+    }
+    const submitDoctorHandler = (event, index) => {
+        event.preventDefault();
 
+        // if(index<doctors.length){
+            let temp = [...doctors];
+            temp[index]= changedDoctor
+            setDoctors(temp);
+            
+        // }else if(index===doctors.length){
+        //     let temp = [...doctors];
+        //     temp[index]= changedDoctor;
+        //     setDoctors(temp);
+        // }
+        console.log("doctors Changed :", doctors);
+
+        const data = doctors
+        
         console.log("data:", data);
         axios.post('https://jsonplaceholder.typicode.com/posts', data)
             .then(response => {
@@ -102,6 +136,33 @@ const Triage = () => {
             })
             .catch(error => console.log("Erorr", error))
 
+    }
+    
+    const submitPatientHandler =(event,index)=>{
+        event.preventDefault();
+
+        //if(index<patients.length){
+            let temp = [...patients];
+            temp[index]= changedPatient;
+            setPatients(temp);
+            
+        // }else if(index===patients.length){
+        //     let temp = [...patients];
+        //     temp[index]= changedPatient;
+        //     setPatients(temp);
+        // }
+        console.log("patients Changed :", patients);
+
+
+        const data = patients
+        
+        console.log("data:", data);
+        axios.post('https://jsonplaceholder.typicode.com/posts', data)
+            .then(response => {
+                console.log("Response", response.data)
+                setModalShow({ ...modalShow, show: false })
+            })
+            .catch(error => console.log("Erorr", error))
     }
     console.log("index", modalShow.index)
 
@@ -115,23 +176,20 @@ const Triage = () => {
     return (
         <Container MenuButtons={MenuButtons} Link={NavLink} Title='تریاژ'>
 
-           {modalShow.show ? <Modal Title={modalShow.operation==='edit'?'ویرایش اطلاعات پزشک':'افزودن پزشک جدید'} doctors={doctors} CloseModal={() => setModalShow({ ...modalShow, show: false })}>
-
-            <form className={style.TriageModal} onSubmit={(event) => submitChangesHandler(event, modalShow.index)}>
-                <label>
-                    {modalShow.operation==='edit' ? 'ویرایش نام پزشک:' :'نام پزشک جدید:'}
-                    <input type='text' onChange={(event) => inputChangedHandler(event)} name='id' placeholder={modalShow.index<doctors.length ?  doctors[modalShow.index].id :''} autoComplete="off"/>
-                </label>
-                <label>
-                {modalShow.operation==='edit' ? 'ویرایش تخصص:' :'تخصص:'}
-                    <input type='text' onChange={(event) => inputChangedHandler(event)} name='title' placeholder={modalShow.index<doctors.length ?  doctors[modalShow.index].title :''} autoComplete="off"/>
-                </label>
-                <button type='submit'>ثبت تغییرات</button>
-            </form>
-            </Modal> : null}
+           {modalShow.show ? <Modal
+                                isShown={isShown}
+                                modalShow={modalShow}
+                                doctors={doctors}
+                                CloseModal={() => setModalShow({ ...modalShow, show: false })}
+                                submitDoctorHandler={(event) => submitDoctorHandler(event, modalShow.index)}
+                                submitPatientHandler={(event)=>submitPatientHandler(event,modalShow.index)}
+                                inputDoctorHandler={(event) => inputDoctorHandler(event,modalShow.index)}
+                                inputPatientHandler={(event) => inputPatientHandler(event,modalShow.index)}
+                                />
+            : null}
 
             {isShown.doctors ? <DoctorsList doctors={doctors} openEditModal={openEditModal}  openAddModal={openAddModal} />: null}
-            {isShown.patients ? <PatientsList /> : null}
+            {isShown.patients ? <PatientsList patients={patients} openEditModal={openEditModal}  openAddModal={openAddModal}/> : null}
         </Container>
         
     )

@@ -1,6 +1,8 @@
 $dark-color: #4d4380;
 $background-color: #9c88ff;
 .Doctors {
+    padding: 0 20px;
+    min-width: 50%;
     
     table {
         border-spacing: 0 !important;
@@ -51,7 +53,7 @@ $background-color: #9c88ff;
             align-items: center;
             width: 173px;
             font-family: "IRANSansWeb";
-            background-color: #4d4380;
+            background-color: $dark-color;
             border: none;
             border-radius: 5px;
             padding: 8px 20px;
@@ -69,4 +71,9 @@ $background-color: #9c88ff;
     }
     
     
+}
+@media only screen and (max-width: 650px) {
+    .Doctors{
+        display: none;
+    }
 }

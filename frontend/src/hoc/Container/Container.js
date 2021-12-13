@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios'
 import { Link } from 'react-router-dom';
-import DoctorsList from '../../components/DoctorsList/DoctorsList';
-import PatientsList from '../../components/PatientsList/PatientsList';
-import { RiHealthBookLine } from 'react-icons/ri';
-import { MdOutlineSick } from 'react-icons/md';
-import style from './Container.module.scss';
 
+import style from './Container.module.scss';
+import {IoIosArrowBack} from 'react-icons/io'
 
 const Container = (props) => {
+    const [showSideBar, setShowSideBar] = useState(true)
 
     return (
         <div className={style.Container}>
@@ -16,7 +14,7 @@ const Container = (props) => {
                 <div>
                     <h1>نام سایت</h1>
                 </div>
-                
+
                 <div className={style.User}>
                     {props.Title}
                     {props.Link}
@@ -24,13 +22,17 @@ const Container = (props) => {
 
             </div>
             <div className={style.Dashboard}>
-                <div className={style.SideBar}>
-                    <div>
-                        <ul className={style.Menu}>
-                            {props.MenuButtons}
-                        </ul>
-                    </div>
+                <div className={style.SideBarContainer}>
+                    {showSideBar ? <div className={style.SideBar}>
+                        <div>
+                            <ul className={style.Menu}>
+                                {props.MenuButtons}
+                            </ul>
+                        </div>
+                    </div> : null}
+                    <button className={showSideBar ? style.ShowButton : style.HideButton} onClick={() => setShowSideBar(!showSideBar)}><IoIosArrowBack className={style.Arrow}/></button>
                 </div>
+
                 <div className={style.Content}>
                     {props.children}
                 </div>

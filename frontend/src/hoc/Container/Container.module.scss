@@ -1,7 +1,7 @@
 $background-color: #9c88ff;
 $dark-color: #4d4380;
 $toolbar-height: 68px;
-$sidebar-width:250px;
+$sidebar-width: 250px;
 .Container {
     h1 {
         color: $dark-color;
@@ -39,61 +39,101 @@ $sidebar-width:250px;
     }
     .Dashboard {
         display: flex;
-        flex-direction: row;
+        flex-flow: row;
+        justify-content: space-between;
+        align-items: center;
 
-        .SideBar {
-            background-color: $dark-color;
-            width: $sidebar-width;
-            height: 100vh;
-            color: white;
+        .SideBarContainer {
+            position: relative;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            position: fixed;
-            z-index: 30;
-            div {
+            height: 100vh;
+            .ShowButton {
+                margin-top: 20px;
+                background-color: $dark-color;
+                position: absolute;
+                z-index: 300;
+                height: 50px;
+                width: 50px;
+                border-radius: 50px;
+                border: 1px solid white;
                 display: flex;
-                flex-direction: column;
-                gap: 27px;
+                align-items: center;
+                justify-content: center;
+                right: 218px;
+                cursor: pointer;
             }
-            .Menu {
-                margin-top: calc(#{$toolbar-height} + 50px);
-                width: 100%;
+            .HideButton {
+                background-color: $dark-color;
+                position: absolute;
+                z-index: 300;
+                height: 50px;
+                width: 50px;
+                border-radius: 50px;
+                border: 1px solid white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                right: -10px;
+                cursor: pointer;
+            }
+            .Arrow {
+                font-size: 22px;
+                color: white;
+            }
+            .SideBar {
+                background-color: $dark-color;
+                width: 250px;
+                height: 100vh;
+                color: white;
                 display: flex;
                 flex-direction: column;
-                gap: 23px;
-                text-align: right;
-                align-items: flex-start;
+                align-items: center;
+                position: static;
+                z-index: 30;
 
-                button {
-                    font-family: "IRANSANSWeb";
-                    border: none;
-                    background-color: transparent;
-                    cursor: pointer;
-                    color: white;
-                    font-size: 18px;
-                    width: 100%;
-                    padding: 0;
+                div {
                     display: flex;
-                    flex-flow: row;
-                    gap: 20px;
-                    align-items: center;
-                    
-                    div{
+                    flex-direction: column;
+                    gap: 27px;
+                }
+                .Menu {
+                    margin-top: calc(#{$toolbar-height} + 50px);
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 23px;
+                    text-align: right;
+                    align-items: flex-start;
+
+                    button {
+                        font-family: "IRANSANSWeb";
+                        border: none;
+                        background-color: transparent;
+                        cursor: pointer;
+                        color: white;
+                        font-size: 18px;
+                        width: 100%;
+                        padding: 0;
                         display: flex;
-                        justify-content: center;
+                        flex-flow: row;
+                        gap: 20px;
                         align-items: center;
-                        font-size: 21px;
+
+                        div {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            font-size: 21px;
+                        }
                     }
-                    
+                    button:hover {
+                        color: $background-color;
+                    }
                 }
-                button:hover{
-                    color: $background-color;
-                    
-                }
-                
             }
         }
+
         ul {
             margin: 0;
             padding: 0;
@@ -102,21 +142,24 @@ $sidebar-width:250px;
             list-style: none;
         }
 
-        .Content {  
+        .Content {
             display: flex;
-            position: absolute;
-            left: 0;
+            /* position: absolute; */
+            /* left: 0; */
             align-items: center;
-            width: calc(100vw - #{$sidebar-width});
+            /* width: calc(100vw - 245px); */
             height: 100vh;
+            width: 100%;
             justify-content: center;
             align-items: center;
         }
     }
 }
-// @media only screen and (max-width:650px) {
-//     .Content{
-//         position: fixed;;
-        
-//     }
-// }
+@media only screen and (max-width: 650px) {
+    .SideBar {
+        position: absolute !important;
+    }
+    .Toolbar {
+        position: absolute !important;
+    }
+}

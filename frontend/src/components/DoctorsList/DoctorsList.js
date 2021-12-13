@@ -2,29 +2,31 @@ import React, { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import style from './DoctorsList.module.scss';
 import Modal from '../Modal/Modal';
-import {FiEdit} from 'react-icons/fi';
-import {toPersianNumber} from '../../helpers/action';
-import {IoPersonAddOutline} from 'react-icons/io5'
+import { FiEdit } from 'react-icons/fi';
+import { toPersianNumber } from '../../helpers/action';
+import { IoPersonAddOutline } from 'react-icons/io5'
 
 const Doctors = (props) => {
-    
+
     const TableHandler = () => {
 
         return props.doctors.map((doctor, index) => {
             const { userId, id, title } = doctor;
-            return <tr key={index}>
-                <td>{toPersianNumber(index+1)}</td>
-                <td>{toPersianNumber(id)}</td>
-                <td>{title}</td>
-                {/* <td className={style.EditButton}>
+            if (index>0) {
+                return <tr key={index}>
+                    <td>{toPersianNumber(index)}</td>
+                    <td>{toPersianNumber(id)}</td>
+                    <td>{title}</td>
+                    {/* <td className={style.EditButton}>
                         <button onClick={() => removeData(id)}>حذف</button>
                     </td> */}
 
-                <td className={style.EditButton}>
-                    <button onClick={() => props.openEditModal(index)}><FiEdit/></button>
-                </td>
-                
-            </tr>
+                    <td className={style.EditButton}>
+                        <button onClick={() => props.openEditModal(index)}><FiEdit /></button>
+                    </td>
+
+                </tr>
+            }
         })
     }
     const TableHeaderHandler = () => {
@@ -34,10 +36,10 @@ const Doctors = (props) => {
         })
     }
 
-    console.log("length",props.doctors.length);
+    console.log("length", props.doctors.length);
     return (
         <Fragment>
-            
+
             <div className={style.Doctors}>
 
                 <h2> لیست پزشکان </h2>
@@ -47,7 +49,7 @@ const Doctors = (props) => {
                         {TableHandler()}
                     </tbody>
                 </table>
-                <div className={style.AddButtonContainer}><button className={style.AddButton} onClick={() => props.openAddModal(props.doctors.length)}>افزودن پزشک جدید<div><IoPersonAddOutline/></div></button></div>
+                <div className={style.AddButtonContainer}><button className={style.AddButton} onClick={() => props.openAddModal(props.doctors.length)}>افزودن پزشک جدید<div><IoPersonAddOutline /></div></button></div>
             </div>
         </Fragment>
     )
