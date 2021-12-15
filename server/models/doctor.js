@@ -1,20 +1,24 @@
-const  mongoose  = require("mongoose");
+const mongoose = require("mongoose");
 
 schema = mongoose.Schema
 
-doctorModel =new schema({
+doctorModel = new schema({
     phone: {
         type: String,
         unique: true
     },
-    fullName :{
-        type: String,   
+    fullName: {
+        type: String,
     },
-    specialty:{
-        type: String,  
-        required:true
+    specialty: {
+        type: String,
+        required: true
+    },
+    active: {
+        type: Boolean,
+        default: true
     }
 })
 
 
-module.exports = mongoose.model('doctor',doctorModel)
+module.exports = mongoose.model('doctor', doctorModel)
