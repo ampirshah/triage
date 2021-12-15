@@ -56,12 +56,15 @@ $dark-color: #4d4380;
         display: flex;
         flex-flow: column;
         gap: 5px;
+        
     }
+
     input {
         border: 1px solid $dark-color;
         border-radius: 3px;
         padding: 8px 14px;
     }
+    
     button {
         color: white;
         background-color: $dark-color;

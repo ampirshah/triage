@@ -1,13 +1,18 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import style from './Modal.module.scss';
 import { CgCloseR } from 'react-icons/cg';
+import Checkbox from '../UI/Checkbox/Checkbox';
 
 const Modal = (props) => {
     let Title = '', Input1 = '', Input2 = '', Input3 = '', Input4 = '', Submit = '';
 
+    // const checkboxChangeHandler = () => {
+    //     setChecked(!checked);
+    // };
+
     switch (props.modalShow.operation) {
         case 'edit':
-            if (props.isShown.doctors) {
+            if (props.isShown === 'doctors') {
                 Submit = props.submitDoctorHandler;
                 Title = 'ویرایش اطلاعات پزشک';
                 Input1 = <label>
@@ -23,7 +28,7 @@ const Modal = (props) => {
                     <input type='text' onChange={props.inputDoctorHandler} name='phoneNumber' value={props.changedDoctor.phoneNumber} autoComplete="off" />
                 </label>
 
-            } else if (props.isShown.patients) {
+            } else if (props.isShown === 'patients') {
                 Submit = props.submitPatientHandler;
                 Title = 'ویرایش اطلاعات بیمار';
                 Input1 = <label>
@@ -40,12 +45,21 @@ const Modal = (props) => {
                 </label>
                 Input4 = <label>
                     ویرایش نام پزشک:
-                    <input type='text' onChange={props.inputPatientHandler} name='doctor' value={props.changedPatient.doctor} autoComplete="off" />
+                    <select name='doctor' onChange={props.inputPatientHandler} >
+                        {props.doctors.map((d, i) => {
+                            return <option key={i} >{d.name}</option>
+                        })}
+                    </select>
                 </label>
+                // Input4 = <label>
+                //     ویرایش نام پزشک:
+                //     <input type='text' onChange={props.inputPatientHandler} name='doctor' value={props.changedPatient.doctor} autoComplete="off" />
+                // </label>
+
             }
             break;
         case 'add':
-            if (props.isShown.doctors) {
+            if (props.isShown === 'doctors') {
                 Submit = props.submitDoctorHandler;
                 Title = 'افزودن پزشک جدید';
                 Input1 = <label>
@@ -61,7 +75,8 @@ const Modal = (props) => {
                     شماره تماس:
                     <input type='text' onChange={props.inputDoctorHandler} name='phoneNumber' value={props.changedDoctor.phoneNumber} autoComplete="off" />
                 </label>
-            } else if (props.isShown.patients) {
+
+            } else if (props.isShown === 'patients') {
                 Submit = props.submitPatientHandler;
                 Title = 'افزودن بیمار جدید';
                 Input1 = <label>
@@ -77,9 +92,33 @@ const Modal = (props) => {
                     <input type='text' onChange={props.inputPatientHandler} name='problem' value={props.changedPatient.problem} autoComplete="off" />
                 </label>
                 Input4 = <label>
-                    نام پزشک:
-                    <input type='text' onChange={props.inputPatientHandler} name='doctor' value={props.changedPatient.doctor} autoComplete="off" />
+                    نام پزشک
+                    {/* <select name='doctor' onChange={props.inputPatientHandler} >
+                        {props.doctors.map((d, i) => {
+                            return <option key={i} mult>{d.name}</option>
+                        })}
+                    </select> */}
+
+                    {/* <Multiselect className={style.SelectBox} options={props.doctors}
+                        selectedValues={props.doctors.selectedValue} 
+                        displayValue="name"
+                        /> */}
+                    {/* {props.doctors.map((d, i) => {
+                        return <Checkbox
+                            label={d.name}
+                            value={props.doctors.isChecked}
+                            onChange={checkboxChangeHandler}
+                        />
+                    })} */}
+
+
+
+
                 </label>
+                // Input4 = <label>
+                //     نام پزشک:
+                //     <input type='text' onChange={props.inputPatientHandler} name='doctor' value={props.changedPatient.doctor} autoComplete="off" />
+                // </label>
             }
             break;
     }

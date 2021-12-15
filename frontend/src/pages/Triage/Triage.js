@@ -12,16 +12,14 @@ import { FiEdit } from 'react-icons/fi';
 import Modal from '../../components/Modal/Modal';
 
 const Triage = () => {
-    const [isShown, setIsShown] = useState({
-        doctors: false,
-        patients: false,
-    })
+    const [isShown, setIsShown] = useState('doctors')
 
     const initialDoctor = {
         id:'',
         name:'',
         phoneNumber:'',
-        specialty:''
+        specialty:'',
+        isChecked:false
     };
     
     const initialPatient={
@@ -33,7 +31,7 @@ const Triage = () => {
         status:'',
         isActive:true
     };
-
+    
     const [doctors, setDoctors] = useState([initialDoctor])
 
     const [patients,setPatients]=useState([initialPatient])
@@ -163,11 +161,18 @@ const Triage = () => {
     console.log("index", modalShow.index)
     
     
-
-
+    const toDoctorsTable=()=>{
+        setIsShown('doctors');
+        setModalShow({...modalShow,show:false})
+    }
+    const toPatientsTable=()=>{
+        setIsShown('patients');
+        setModalShow({...modalShow,show:false})
+    }
+    
     let MenuButtons=<div>
-        <li><button onClick={() => setIsShown({ doctors: true, patients: false })}><div><RiHealthBookLine/></div>لیست پزشکان </button></li>
-                <li><button onClick={() => setIsShown({ doctors: false, patients: true })}><div><MdOutlineSick/></div>لیست بیماران</button></li>
+        <li><button onClick={() => toDoctorsTable()}><div><RiHealthBookLine/></div>لیست پزشکان </button></li>
+        <li><button onClick={() => toPatientsTable()}><div><MdOutlineSick/></div>لیست بیماران</button></li>
     </div>
     let NavLink=<Link to='/Doctor'>پزشک هستید؟</Link>
     return (
@@ -188,8 +193,8 @@ const Triage = () => {
                                 />
             : null}
 
-            {isShown.doctors ? <DoctorsList doctors={doctors} openEditModal={openEditModal}  openAddModal={openAddModal} />: null}
-            {isShown.patients ? <PatientsList patients={patients} openEditModal={openEditModal}  openAddModal={openAddModal}/> : null}
+            {isShown==='doctors' ? <DoctorsList doctors={doctors} openEditModal={openEditModal}  openAddModal={openAddModal} />: null}
+            {isShown==='patients'? <PatientsList doctors={doctors} patients={patients} modalShow={modalShow} openEditModal={openEditModal}  openAddModal={openAddModal}/> : null}
         </Container>
         
     )

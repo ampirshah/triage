@@ -3,46 +3,63 @@ import style from './PatientsList.module.scss';
 import { toPersianNumber } from '../../helpers/action';
 import { FiEdit } from 'react-icons/fi';
 import { IoPersonAddOutline } from 'react-icons/io5';
+import Doctors from '../DoctorsList/DoctorsList';
 
 const PatientsList = (props) => {
 
+    // const DoctorsHandler=()=>{
+
+    //     if(props.doctors.name){
+    //         return props.doctors.map((doctor, index) => {
+    //             const { name} = doctor;
+    //             if (index>0) {
+    //                 return <tr key={index}>  
+    //                     <td>{name}</td>
+
+    //                 </tr>
+    //             }
+    //         })
+    //     }
+    // }
     const TableHandler = () => {
+
         return props.patients.map((patient, index) => {
-            
-            const { name, nationalCode, turn, problem ,doctor,status} = patient;
-            
-            if(index>0){
+
+            const { name, nationalCode, turn, problem, doctor, status } = patient;
+
+            if (index > 0) {
                 return <tr key={index}>
-                <td>{toPersianNumber(index)}</td>
-                <td>{name}</td>
-                <td>{toPersianNumber(nationalCode)}</td>
-                <td>{problem}</td>
-                <td>{turn}</td>
-                <td>{doctor}</td>
-                <td>{status}</td>
-                {/* <td>{()=>{return (props.patients.doctor).map((pDoctor,i)=>{
+                    <td>{toPersianNumber(index)}</td>
+                    <td>{name}</td>
+                    <td>{toPersianNumber(nationalCode)}</td>
+                    <td>{problem}</td>
+                    <td>{turn}</td>
+                    <td>{doctor}</td>
+                    {console.log("d",doctor)}
+                    <td>{status}</td>
+                    {/* <td>{()=>{return (props.patients.doctor).map((pDoctor,i)=>{
                     //const {dName,dVisit} = pDoctor;
                     return <tr key={i}>
                         <td>{pDoctor}</td>
                         </tr>
                 })}}</td> */}
-                
-                <td className={style.EditButton}>
-                    <button onClick={() => props.openEditModal(index)}><FiEdit /></button>
-                </td>
 
-            </tr>
+                    <td className={style.EditButton}>
+                        <button onClick={() => props.openEditModal(index)}><FiEdit /></button>
+                    </td>
+
+                </tr>
             }
         })
     }
     const TableHeaderHandler = () => {
-        let header = ["شناسه", "نام بیمار","کد ملی","علت مراجعه", "نوبت", "پزشک", "وضعیت", "ویرایش"]
+        let header = ["شناسه", "نام بیمار", "کد ملی", "علت مراجعه", "نوبت", "پزشک", "وضعیت", "ویرایش"]
         return header.map((key, index) => {
             return <th key={index}>{key}</th>
         })
     }
 
-//    console.log("doctor.name", props.patients[0].doctor.name);
+    //    console.log("doctor.name", props.patients[0].doctor.name);
     return (
         <Fragment>
 

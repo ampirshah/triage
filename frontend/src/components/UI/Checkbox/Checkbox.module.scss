@@ -1,0 +1,8 @@
+.Checkbox {
+    display: flex;
+    flex-direction: row !important;
+    align-items: center;
+    input {
+        transform: scale(1.3);
+    }
+}
