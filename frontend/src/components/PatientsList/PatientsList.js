@@ -8,30 +8,41 @@ const PatientsList = (props) => {
 
     const TableHandler = () => {
         return props.patients.map((patient, index) => {
-            const { name, turn, problem } = patient;
-            return <tr key={index}>
-                <td>{toPersianNumber(index + 1)}</td>
+            
+            const { name, nationalCode, turn, problem ,doctor,status} = patient;
+            
+            if(index>0){
+                return <tr key={index}>
+                <td>{toPersianNumber(index)}</td>
                 <td>{name}</td>
+                <td>{toPersianNumber(nationalCode)}</td>
                 <td>{problem}</td>
                 <td>{turn}</td>
-                {/* <td>{doctor.name}</td>
-                <td>{doctor.visited}</td> */}
-
+                <td>{doctor}</td>
+                <td>{status}</td>
+                {/* <td>{()=>{return (props.patients.doctor).map((pDoctor,i)=>{
+                    //const {dName,dVisit} = pDoctor;
+                    return <tr key={i}>
+                        <td>{pDoctor}</td>
+                        </tr>
+                })}}</td> */}
+                
                 <td className={style.EditButton}>
                     <button onClick={() => props.openEditModal(index)}><FiEdit /></button>
                 </td>
 
             </tr>
+            }
         })
     }
     const TableHeaderHandler = () => {
-        let header = ["شناسه", "نام بیمار", "نوبت", "پزشک", "وضعیت", "ویرایش"]
+        let header = ["شناسه", "نام بیمار","کد ملی","علت مراجعه", "نوبت", "پزشک", "وضعیت", "ویرایش"]
         return header.map((key, index) => {
             return <th key={index}>{key}</th>
         })
     }
 
-    console.log("length", props.patients.length);
+//    console.log("doctor.name", props.patients[0].doctor.name);
     return (
         <Fragment>
 

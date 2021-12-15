@@ -2,6 +2,7 @@ import * as React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import style from './App.module.scss';
 import Doctor from "./pages/Doctor/Doctor";
+import Login from "./pages/Login/Login";
 import Triage from "./pages/Triage/Triage";
 
 function App() {
@@ -9,12 +10,11 @@ function App() {
     <div className={style.App}>
       <Routes>
         <Route path='/' element={<Navigate replace to="/Triage" />} />
+        {/* <Route path='/' element={<Login />} /> */}
         <Route path='/Triage' element={<Triage />} />
         <Route path='/Doctor' element={<Doctor />} />
-        
-        {/* <Route path='/' element={<Navigate to='/Triage/' />} /> */}
-        {/* <Route path="/" element={<Triage />} />
-        <Route path="/:id" element={<About />} /> */}
+
+
       </Routes>
 
       {/* <Routes>

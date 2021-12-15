@@ -11,15 +11,14 @@ const Doctors = (props) => {
     const TableHandler = () => {
 
         return props.doctors.map((doctor, index) => {
-            const { userId, id, title } = doctor;
+            const { name,specialty,phoneNumber } = doctor;
             if (index>0) {
                 return <tr key={index}>
                     <td>{toPersianNumber(index)}</td>
-                    <td>{toPersianNumber(id)}</td>
-                    <td>{title}</td>
-                    {/* <td className={style.EditButton}>
-                        <button onClick={() => removeData(id)}>حذف</button>
-                    </td> */}
+                    <td>{name}</td>
+                    <td>{specialty}</td>
+                    <td>{phoneNumber}</td>
+
 
                     <td className={style.EditButton}>
                         <button onClick={() => props.openEditModal(index)}><FiEdit /></button>
@@ -30,7 +29,7 @@ const Doctors = (props) => {
         })
     }
     const TableHeaderHandler = () => {
-        let header = ["شناسه", "نام پزشک", "تخصص", "ویرایش"]
+        let header = ["شناسه", "نام پزشک", "تخصص","شماره تماس", "ویرایش"]
         return header.map((key, index) => {
             return <th key={index}>{key}</th>
         })

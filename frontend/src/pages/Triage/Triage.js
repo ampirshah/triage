@@ -17,21 +17,20 @@ const Triage = () => {
         patients: false,
     })
 
-
     const initialDoctor = {
-        userId: '',
-        id: '',
-        title: '',
-        body: ''
+        id:'',
+        name:'',
+        phoneNumber:'',
+        specialty:''
     };
+    
     const initialPatient={
         name:'',
+        nationalCode:'',
         turn:0,
         problem:'',
-        doctor:{
-            name:'',
-            visited:false
-        },
+        doctor:'',
+        status:'',
         isActive:true
     };
 
@@ -65,12 +64,14 @@ const Triage = () => {
       
         console.log("modal", index);
         setModalShow({ ...modalShow, index: index, show: true ,operation:'edit'});
-        setChangedDoctor('');
+        setChangedDoctor({...doctors[index]});
+        setChangedPatient({...patients[index]});
       
     }
     const openAddModal=(index)=>{
         setModalShow({ ...modalShow, index: index, show: true,operation:'add' });
-        setChangedDoctor('');
+        setChangedDoctor(initialDoctor);
+        setChangedPatient(initialPatient);
     }
     
     
@@ -84,23 +85,28 @@ const Triage = () => {
             console.log("[event.target.name]",event.target.name);
             setChangedDoctor({
                 ...changedDoctor,
-                userId:doctors[0].userId,
                 [event.target.name]:event.target.value,
-                body:doctors[0].body
             });
            
             console.log("changedDoctor", changedDoctor);
 
     }
 
-    console.log("doctors.title", doctors.title);
-
+   
     const inputPatientHandler=(event,index)=>{
-        setChangedPatient({
-            ...changedPatient,
-            [event.target.name]:event.target.value,
-        });
-            console.log("changedPatient", changedPatient);
+        // if(event.target.name==='doctor'){      
+        //     setChangedPatient({
+        //         ...changedDoctor,
+        //         doctors:[...doctors,event.target.value]
+        //     });
+        // }
+        // else{
+            setChangedPatient({
+                ...changedPatient,
+                [event.target.name]:event.target.value,
+            });
+        //}
+        console.log("changedPatient", changedPatient);
             
         //    let temp={...changedPatient};
         // if(event.target.name==='name'){
@@ -111,28 +117,24 @@ const Triage = () => {
         // }
         //     setChangedPatient(temp); y
     }
+    
     const submitDoctorHandler = (event, index) => {
         event.preventDefault();
 
-        // if(index<doctors.length){
             let temp = [...doctors];
             temp[index]= changedDoctor
             setDoctors(temp);
             
-        // }else if(index===doctors.length){
-        //     let temp = [...doctors];
-        //     temp[index]= changedDoctor;
-        //     setDoctors(temp);
-        // }
+        
         console.log("doctors Changed :", doctors);
-
+        setModalShow({ ...modalShow, show: false })
         const data = doctors
         
         console.log("data:", data);
         axios.post('https://jsonplaceholder.typicode.com/posts', data)
             .then(response => {
                 console.log("Response", response.data)
-                setModalShow({ ...modalShow, show: false })
+                //setModalShow({ ...modalShow, show: false })
             })
             .catch(error => console.log("Erorr", error))
 
@@ -141,18 +143,12 @@ const Triage = () => {
     const submitPatientHandler =(event,index)=>{
         event.preventDefault();
 
-        //if(index<patients.length){
             let temp = [...patients];
             temp[index]= changedPatient;
             setPatients(temp);
             
-        // }else if(index===patients.length){
-        //     let temp = [...patients];
-        //     temp[index]= changedPatient;
-        //     setPatients(temp);
-        // }
         console.log("patients Changed :", patients);
-
+        setModalShow({ ...modalShow, show: false })
 
         const data = patients
         
@@ -160,12 +156,13 @@ const Triage = () => {
         axios.post('https://jsonplaceholder.typicode.com/posts', data)
             .then(response => {
                 console.log("Response", response.data)
-                setModalShow({ ...modalShow, show: false })
+                //setModalShow({ ...modalShow, show: false })
             })
             .catch(error => console.log("Erorr", error))
     }
     console.log("index", modalShow.index)
-
+    
+    
 
 
     let MenuButtons=<div>
@@ -180,11 +177,14 @@ const Triage = () => {
                                 isShown={isShown}
                                 modalShow={modalShow}
                                 doctors={doctors}
+                                changedDoctor={changedDoctor}
+                                changedPatient={changedPatient}
                                 CloseModal={() => setModalShow({ ...modalShow, show: false })}
                                 submitDoctorHandler={(event) => submitDoctorHandler(event, modalShow.index)}
                                 submitPatientHandler={(event)=>submitPatientHandler(event,modalShow.index)}
                                 inputDoctorHandler={(event) => inputDoctorHandler(event,modalShow.index)}
                                 inputPatientHandler={(event) => inputPatientHandler(event,modalShow.index)}
+                                //patientsDoctorChangeHandler={(event)=>patientsDoctorChangeHandler(event,modalShow.index)}
                                 />
             : null}
 
