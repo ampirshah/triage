@@ -2,16 +2,16 @@ const patientModel = require("../models/patient");
 const doctor = require("../models/doctor");
 let methods = {};
 
-methods.add = function (nationalCode,fullName, childs, whichdoctor, callback) {
+methods.add = function (nationalCode, fullName, childs, whichdoctor, callback) {
     let newpatient = new patientModel({
-        nationalCode:nationalCode,
+        nationalCode: nationalCode,
         fullName: fullName,
         numberOfChildren: childs
     })
 
     //{ specialty:{$match: whichdoctor}nationalCoded:nationalCoded,
 
-    doctor.find({ specialty: { $in: whichdoctor } }, (err, doctor) => {
+    doctor.find({ specialty: { $in: whichdoctor } }).lean().exec((err, doctor) => {
         if (err) {
             console.log(err);
         } else {
@@ -44,7 +44,7 @@ methods.add = function (nationalCode,fullName, childs, whichdoctor, callback) {
 
 methods.list = function (callback) {
 
-    patientModel.find({ active: true }).populate({ path: 'needTobeVisitBy.doctor', select: ['fullName', 'specialty'] }).exec((err, doctors) => {
+    patientModel.find({ active: true }).populate({ path: 'needTobeVisitBy.doctor', select: ['fullName', 'specialty'] }).lean().exec((err, doctors) => {
         if (err) {
             console.log("hello from error");
             callback(500, err, null)

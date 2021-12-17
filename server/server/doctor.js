@@ -5,11 +5,11 @@ let methods = {};
 
 methods.add = function (phoneNumber, fullName, specialty, callback) {
     doctorModel.findOne({ phone: phoneNumber }).lean().exec((err, doctor) => {
-    // doctorModel.findOne({ phone: phoneNumber }, (err, doctor) => {
+        // doctorModel.findOne({ phone: phoneNumber }, (err, doctor) => {
 
         if (err) {
             console.log(err);
-            callback(500, err,false)
+            callback(500, err, false)
         } else {
             //age doctor bood
             if (doctor) {
@@ -24,7 +24,7 @@ methods.add = function (phoneNumber, fullName, specialty, callback) {
                 })
                 newdoctor.save((err) => {
                     if (err) {
-                        callback(500, err,false)
+                        callback(500, err, false)
                     } else {
                         console.log("new doc added");
                         callback(null, null, false)
@@ -37,7 +37,7 @@ methods.add = function (phoneNumber, fullName, specialty, callback) {
 };
 
 methods.login = function (phoneNumber, callback) {
-    doctorModel.findOne({ phone: phoneNumber }, (err, doctor) => {
+    doctorModel.findOne({ phone: phoneNumber }).lean().exec((err, doctor) => {
         if (err) {
             this.console.log(err);
             callback(500, err)
@@ -51,7 +51,7 @@ methods.login = function (phoneNumber, callback) {
     })
 }
 methods.list = function (callback) {
-    doctorModel.find({ active: true }, (err, doctors) => {
+    doctorModel.find().lean().exec((err, doctors) => {
         if (err) {
             callback(500, err, null)
         } else {
@@ -61,8 +61,23 @@ methods.list = function (callback) {
 
 }
 
-methods.del = function (phone, callback) {
-    doctorModel.findOneAndUpdate({ phone: phone }, { active: false }, (err, doctor) => {
+methods.deactive = function (phone, callback) {
+    doctorModel.findOneAndUpdate({ phone: phone }, { active: false }).lean().exec((err, doctor) => {
+        if (err) {
+            callback(500, err)
+        } else {
+            if (doctor) {
+                callback(null, null, doctor)
+            } else {
+                callback(400, "دکتر مورد نظر پیدا نشد ", doctor)
+            }
+
+        }
+    })
+}
+
+methods.active = function (phone, callback) {
+    doctorModel.findOneAndUpdate({ phone: phone }, { active: true }).lean().exec((err, doctor) => {
         if (err) {
             callback(500, err)
         } else {
@@ -77,7 +92,7 @@ methods.del = function (phone, callback) {
 }
 
 methods.edit = function (id, newPhone, newName, newSpecialty, callback) {
-    doctorModel.findOneAndUpdate({ _id: id }, { phone: newPhone, fullName: newName, specialty: newSpecialty },
+    doctorModel.findOneAndUpdate({ _id: id }, { phone: newPhone, fullName: newName, specialty: newSpecialty }).exec(
         (err, updated) => {
             if (err) {
                 callback(500, err)

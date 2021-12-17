@@ -13,18 +13,21 @@ let privates = {
 };
 
 
-router.post('/addPatient', (req, res) => {
-    if (req.body.fullName === undefined || req.body.whichdoctor === undefined || req.body.nationalCode=== undefined) {
+router.post('/add', (req, res) => {
+    if (req.body.fullName === undefined || req.body.whichdoctor === undefined || req.body.nationalCode === undefined) {
         res.status(400).send({
             success: false,
             err: "اسم یا کدملی بیمار وارد نشده است یا موضوع مورد مراجعه ذکر نشده"
         })
     } else {
-        req.body.whichdoctor = req.body.whichdoctor.split(',')
-        console.log(typeof req.body.whichdoctor + ":" + req.body.whichdoctor);
+        if (Array.isArray(req.body.whichdoctor)) {
+            console.log("is array");
+        } else {
+            req.body.whichdoctor = [req.body.whichdoctor]
+        }
 
         if (req.body.numberOfChildren === undefined || req.body.numberOfChildren.length === 0) {
-            patientServer.add( req.body.nationalCode ,req.body.fullName , 0, req.body.whichdoctor, (errcode, errtext) => {
+            patientServer.add(req.body.nationalCode, req.body.fullName, 0, req.body.whichdoctor, (errcode, errtext) => {
                 if (errcode) {
                     res.status(errcode).send({
                         success: false,
@@ -33,12 +36,12 @@ router.post('/addPatient', (req, res) => {
                 } else {
                     res.status(200).send({
                         success: true,
-                        err: " بیمار اضافه شد"
+                        text: " بیمار اضافه شد"
                     })
                 }
             })
         } else {
-            patientServer.add( req.body.nationalCode,req.body.fullName, req.body.numberOfChildren, req.body.whichdoctor, (errcode, errtext) => {
+            patientServer.add(req.body.nationalCode, req.body.fullName, req.body.numberOfChildren, req.body.whichdoctor, (errcode, errtext) => {
                 if (errcode) {
                     res.status(errcode).send({
                         success: false,
@@ -47,7 +50,7 @@ router.post('/addPatient', (req, res) => {
                 } else {
                     res.status(200).send({
                         success: true,
-                        err: " بیمار اضافه شد"
+                        text: " بیمار اضافه شد"
                     })
                 }
             })
@@ -57,7 +60,7 @@ router.post('/addPatient', (req, res) => {
 })
 //nationalCoded,
 
-router.post('/patientlist', (req, res) => {
+router.get('/list', (req, res) => {
     patientServer.list((errcode, errtext, data) => {
         if (errcode) {
             res.status(errcode).send({
@@ -73,5 +76,7 @@ router.post('/patientlist', (req, res) => {
     })
 })
 
-router.post('/editPatient')
+router.post('/edit',(req,res)=>{
+
+})
 module.exports = router
