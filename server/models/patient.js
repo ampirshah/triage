@@ -3,8 +3,7 @@ const schema = mongoose.Schema
 
 let patientModel = new schema({
     nationalCode: {
-        type: String,
-
+        type: String
     },
     fullName: {
         type: "string"

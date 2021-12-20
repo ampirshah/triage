@@ -3,6 +3,7 @@ var router = express.Router();
 let persianjs = require("persianjs");
 let patientServer = require('../server/patient');
 
+
 let privates = {
     verifyPhone: phone => {
         return /^[0][9][0-9]{9}$/.test(phone)
@@ -25,6 +26,8 @@ router.post('/add', (req, res) => {
         } else {
             req.body.whichdoctor = [req.body.whichdoctor]
         }
+
+        
 
         if (req.body.numberOfChildren === undefined || req.body.numberOfChildren.length === 0) {
             patientServer.add(req.body.nationalCode, req.body.fullName, 0, req.body.whichdoctor, (errcode, errtext) => {

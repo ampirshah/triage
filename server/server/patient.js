@@ -1,6 +1,8 @@
 const patientModel = require("../models/patient");
 const doctor = require("../models/doctor");
 var ObjectId = require('mongodb').ObjectId;
+const mongoose = require('mongoose');
+
 let methods = {};
 
 methods.add = function (nationalCode, fullName, childs, whichdoctor, callback) {
@@ -9,20 +11,28 @@ methods.add = function (nationalCode, fullName, childs, whichdoctor, callback) {
         fullName: fullName,
         numberOfChildren: childs
     })
+    whichdoctor = whichdoctor.map(s => mongoose.Types.ObjectId(s));
 
-    //{ specialty:{$match: whichdoctor}nationalCoded:nationalCoded,
 
-    doctor.find({ specialty: { $in: whichdoctor } }).lean().exec((err, doctor) => {
+
+    doctor.find({ "_id": { $in: whichdoctor } }).lean().exec((err, doctor) => {
         if (err) {
             console.log(err);
         } else {
             if (doctor) {
-                console.log("doctoooooor::::::");
-                console.log("founded doc" + ":" + doctor);
-                for (let i in doctor) {
-                    console.log(i);
-                    newpatient.needTobeVisitBy.push({ doctor: doctor[i]._id })
-                }
+                // console.log("doctoooooor::::::");
+                // console.log("founded doc" + ":" + doctor);
+                /// implimante with map
+
+                doctor.map(d => {
+                    // console.log(d);
+                    newpatient.needTobeVisitBy.push({ doctor: d })
+                })
+
+                // for (let i in doctor) {
+                //     // console.log(i);
+                //     newpatient.needTobeVisitBy.push({ doctor: doctor[i]._id })
+                // }
 
                 newpatient.save((err, result) => {
                     if (err) {
