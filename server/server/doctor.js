@@ -1,6 +1,7 @@
 const doctor = require("../models/doctor");
 const doctorModel = require("../models/doctor");
-
+const patientModel = require("../models/patient");
+var ObjectId = require('mongodb').ObjectId;
 let methods = {};
 
 methods.add = function (phoneNumber, fullName, specialty, callback) {
@@ -92,7 +93,7 @@ methods.active = function (phone, callback) {
 }
 
 methods.edit = function (id, newPhone, newName, newSpecialty, callback) {
-    doctorModel.findOneAndUpdate({ _id: id }, { phone: newPhone, fullName: newName, specialty: newSpecialty }).exec(
+    doctorModel.findOneAndUpdate({ _id: id }, { phone: newPhone, fullName: newName, specialty: newSpecialty }).lean().exec(
         (err, updated) => {
             if (err) {
                 callback(500, err)
@@ -106,4 +107,55 @@ methods.edit = function (id, newPhone, newName, newSpecialty, callback) {
         })
 
 }
+
+
+methods.patientList = function (id, callback) {
+    patientModel.find({ 'needTobeVisitBy.doctor': ObjectId(id), active:true }).lean().exec((err, result) => {
+        if (err) {
+            callback(500, err, null)
+        }
+        else {
+            index = result.map((javab, index) => {
+                for (let i of javab.needTobeVisitBy) {
+                    console.log("typeof::" + typeof i.doctor);
+                    if ((i.doctor == id && i.status === "2") || i.status === "1") {
+                        return index
+                    }
+                }
+            })
+
+            console.log("return:" + index)
+            let numberOfRemove = 0
+
+            index.map((i) => {
+                console.log();
+                if (i !== undefined) {
+                    console.log(i);
+                    deleteindex = i - numberOfRemove
+                    console.log("most be delete:" + (i - numberOfRemove) + "  len:" + result.length)
+                    result.splice((i - numberOfRemove), 1)
+                    numberOfRemove = numberOfRemove + 1
+                    console.log("check the action" + numberOfRemove);
+                }
+
+            })
+
+            callback(null, null, result)
+        }
+    })
+}
+
+
+// if (err) {
+//     callback(500, err, null)
+// }
+// else {
+//     callback(null, null, result)
+// }
+
+
+methods.patientEnterd = function (turn, callback) {
+    
+}
+
 module.exports = methods

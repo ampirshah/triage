@@ -75,8 +75,53 @@ router.get('/list', (req, res) => {
         }
     })
 })
+router.post('/deActive', (req, res) => {
+    if (req.body.id === undefined || req.body.id.length === 0 || req.body.turn === undefined || req.body.turn.length === 0) {
+        res.status(400).send({
+            success: false,
+            err: "missing id or turn"
+        })
+    } else {
+        patientServer.deActive(req.body.id, req.body.turn, (errcode, text) => {
+            if (errcode) {
+                res.status(errcode).send({
+                    success: false,
+                    err: text
+                })
+            } else {
+                res.status(200).send({
+                    success: true,
+                    text: text
+                })
+            }
+        })
+    }
 
-router.post('/edit',(req,res)=>{
+})
+router.post('/Active', (req, res) => {
+    if (req.body.id === undefined || req.body.id.length === 0 || req.body.turn === undefined || req.body.turn.length === 0) {
+        res.status(400).send({
+            success: false,
+            err: "missing id or turn"
+        })
+    } else {
+        patientServer.active(req.body.id, req.body.turn, (errcode, text) => {
+            if (errcode) {
+                res.status(errcode).send({
+                    success: false,
+                    err: text
+                })
+            } else {
+                res.status(200).send({
+                    success: true,
+                    text: text
+                })
+            }
+        })
+    }
+
+})
+router.post('/edit', (req, res) => {
 
 })
 module.exports = router

@@ -1,5 +1,6 @@
 const patientModel = require("../models/patient");
 const doctor = require("../models/doctor");
+var ObjectId = require('mongodb').ObjectId;
 let methods = {};
 
 methods.add = function (nationalCode, fullName, childs, whichdoctor, callback) {
@@ -55,6 +56,36 @@ methods.list = function (callback) {
 
 }
 
+methods.deActive = function (id, turn, callback) {
+    patientModel.findOneAndUpdate({ _id: ObjectId(id), turn: turn }, { active: false }).lean().exec((err, patient) => {
+        if (err) {
+            callback(500, err)
+        } else {
+            if (patient) {
+                callback(null, "کاربر غیرفعال شد")
+            } else {
+                callback(400, "بیمار یافت نشد")
+            }
+
+        }
+    })
+
+}
+
+methods.active = function (id, turn, callback) {
+    patientModel.findOneAndUpdate({ _id: ObjectId(id), turn: turn }, { active: true }).lean().exec((err, patient) => {
+        if (err) {
+            callback(500, err)
+        } else {
+            if (patient) {
+                callback(null, "کاربر فعال شد")
+            } else {
+                callback(400, "بیمار یافت نشد")
+            }
+
+        }
+    })
+}
 
 module.exports = methods
 

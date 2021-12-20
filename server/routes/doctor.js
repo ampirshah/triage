@@ -206,4 +206,49 @@ router.post('/active', (req, res) => {
 
 })
 
+router.get('/patientList', (req, res) => {
+    if (req.body.id === undefined || req.body.id.length === 0) {
+        res.status(400).send({
+            success: false,
+            error: "missing id"
+        });
+    } else {
+        doctorService.patientList(req.body.id, (errcode, errtext, patients) => {
+            if (errcode) {
+                res.status(errcode).send({
+                    success: false,
+                    err: errtext
+                })
+            } else {
+                res.status(200).send({
+                    success: true,
+                    list: patients
+                })
+            }
+        })
+    }
+})
+
+router.post('/callForPatient', (req, res) => {
+    if (req.body.id === undefined || req.body.id.length === 0) {
+        res.status(400).send({
+            success: false,
+            error: "missing id"
+        });
+    } else {
+        doctorService.patientList(req.body.id, (errcode, errtext, patients) => {
+            if (errcode) {
+                res.status(errcode).send({
+                    success: false,
+                    err: errtext
+                })
+            } else {
+                res.status(200).send({
+                    success: true,
+                    nextPatient: patients[0]
+                })
+            }
+        })
+    }
+})
 module.exports = router

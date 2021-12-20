@@ -10,7 +10,8 @@ let patientModel = new schema({
         type: "string"
     },
     turn: {
-        type: Number
+        type: Number,
+        unique:true
     },
     numberOfChildren: {
         type: Number,
