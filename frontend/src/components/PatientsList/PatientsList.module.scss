@@ -3,7 +3,10 @@ $background-color: #9c88ff;
 .Patients {
     padding: 0 20px;
     min-width: 50%;
-    
+    margin: 54px 0 0 0;
+    h2{
+        margin-bottom: 5px;
+    }
     table {
         border-spacing: 0 !important;
         border-collapse: collapse !important;
@@ -44,7 +47,7 @@ $background-color: #9c88ff;
     .AddButtonContainer{
         display: flex;
         flex-flow: row-reverse;
-        margin-top: 55px;
+        margin: 50px 0 0 0;
 
         .AddButton {
             display: flex;

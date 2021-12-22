@@ -2,7 +2,12 @@
   font-family: IRANSansWeb;
   src: url('./assets/fonts/IRANSansWeb.ttf');
 }
+*{
+  margin: 0;
+  padding: 0;
+}
 body {
+ 
   direction: rtl;
   margin: 0;
   padding: 0;

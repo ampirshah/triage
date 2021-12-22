@@ -1,14 +1,25 @@
 import React, { Fragment, useState } from 'react';
 import style from './Modal.module.scss';
 import { CgCloseR } from 'react-icons/cg';
-import Checkbox from '../UI/Checkbox/Checkbox';
+import { toPersianNumber } from '../../helpers/action';
+import { RiArrowDropDownLine } from 'react-icons/ri';
 
 const Modal = (props) => {
-    let Title = '', Input1 = '', Input2 = '', Input3 = '', Input4 = '', Submit = '';
+    let Title = '', Input1 = '', Input2 = '', Input3 = '', Submit = '';
+    const [showList, setshowList] = useState(false)
 
-    // const checkboxChangeHandler = () => {
-    //     setChecked(!checked);
-    // };
+    ///Sort ?
+    const doctorsList = [];
+
+    for (let i in props.doctors) {
+        doctorsList.push(props.doctors[i].name)
+    }
+
+    const collator = new Intl.Collator('fa');
+    doctorsList.sort(collator.compare);
+    //console.log("sortedList", sortedList);
+
+    ///
 
     switch (props.modalShow.operation) {
         case 'edit':
@@ -39,22 +50,22 @@ const Modal = (props) => {
                     ویرایش کد ملی :
                     <input type='text' onChange={props.inputPatientHandler} name='nationalCode' value={props.changedPatient.nationalCode} autoComplete="off" />
                 </label>
+
                 Input3 = <label>
-                    ویرایش بیماری:
-                    <input type='text' onChange={props.inputPatientHandler} name='problem' value={props.changedPatient.problem} autoComplete="off" />
-                </label>
-                Input4 = <label>
                     ویرایش نام پزشک:
-                    <select name='doctor' onChange={props.inputPatientHandler} >
-                        {props.doctors.map((d, i) => {
-                            return <option key={i} >{d.name}</option>
-                        })}
-                    </select>
+
+                    <div className={style.MultiSelectContainer}>
+                        {console.log("changedPatient.doctor", props.changedPatient.doctor)}
+                        <h5 onClick={() => setshowList(!showList)}>{toPersianNumber(props.changedPatient.doctor.filter(t => (t.selected === true)).length)} پزشک انتخاب شده <RiArrowDropDownLine /></h5>
+                        <div className={showList ? style.MultiSelectShow : style.MultiSelectHide}>
+                            {props.doctorsList.map((d, i) => {
+                                let index = props.changedPatient.doctor.findIndex(pd => (pd.name === d));
+                                return <p className={(props.changedPatient.doctor[index] && props.changedPatient.doctor[index].selected === true) ? style.Selected : null} key={d} onClick={() => props.editSelectDoctorHandler(d)}>{d}</p>
+                            })}
+                        </div>
+                    </div>
                 </label>
-                // Input4 = <label>
-                //     ویرایش نام پزشک:
-                //     <input type='text' onChange={props.inputPatientHandler} name='doctor' value={props.changedPatient.doctor} autoComplete="off" />
-                // </label>
+
 
             }
             break;
@@ -87,58 +98,43 @@ const Modal = (props) => {
                     کد ملی:
                     <input type='text' onChange={props.inputPatientHandler} name='nationalCode' value={props.changedPatient.nationalCode} autoComplete="off" />
                 </label>
+
+
                 Input3 = <label>
-                    بیماری:
-                    <input type='text' onChange={props.inputPatientHandler} name='problem' value={props.changedPatient.problem} autoComplete="off" />
+                    نام پزشک:
+
+                    <div className={style.MultiSelectContainer}>
+                        {console.log("changedPatient.doctor", props.changedPatient.doctor)}
+                        <h5 onClick={() => setshowList(!showList)}>{toPersianNumber(props.changedPatient.doctor.filter(t => (t.selected === true)).length)} پزشک انتخاب شده <RiArrowDropDownLine /></h5>
+                        <div className={showList ? style.MultiSelectShow : style.MultiSelectHide}>
+                            {props.doctorsList.map((d, i) => {
+                                let index = props.changedPatient.doctor.findIndex(pd => (pd.name === d));
+                                return <p className={(props.changedPatient.doctor[index] && props.changedPatient.doctor[index].selected === true) ? style.Selected : null} key={d} onClick={() => props.selectDoctorHandler(d)}>{d}</p>
+                            })}
+                        </div>
+                    </div>
                 </label>
-                Input4 = <label>
-                    نام پزشک
-                    {/* <select name='doctor' onChange={props.inputPatientHandler} >
-                        {props.doctors.map((d, i) => {
-                            return <option key={i} mult>{d.name}</option>
-                        })}
-                    </select> */}
-
-                    {/* <Multiselect className={style.SelectBox} options={props.doctors}
-                        selectedValues={props.doctors.selectedValue} 
-                        displayValue="name"
-                        /> */}
-                    {/* {props.doctors.map((d, i) => {
-                        return <Checkbox
-                            label={d.name}
-                            value={props.doctors.isChecked}
-                            onChange={checkboxChangeHandler}
-                        />
-                    })} */}
-
-
-
-
-                </label>
-                // Input4 = <label>
-                //     نام پزشک:
-                //     <input type='text' onChange={props.inputPatientHandler} name='doctor' value={props.changedPatient.doctor} autoComplete="off" />
-                // </label>
+               
             }
             break;
     }
 
     return (
         <Fragment>
-            <div className={style.Backdrop} onClick={props.CloseModal}></div>
+            
             <div className={style.ModalContainer}>
+            <div className={style.Backdrop} onClick={props.CloseModal}></div>
                 <div className={style.Modal}>
                     <CgCloseR className={style.Cancel} onClick={props.CloseModal} />
 
-
                     <div className={style.ModalContent}>
                         <h3>{Title}</h3>
-                        <form className={style.TriageModal} onSubmit={Submit}>
+                        <form id='Modal' className={style.TriageModal} onSubmit={Submit}>
                             {Input1}
                             {Input2}
                             {Input3}
-                            {Input4}
-                            <button type='submit'>ثبت تغییرات</button>
+
+                            <button type='submit' form='Modal' >ثبت تغییرات</button>
                         </form>
                     </div>
 
@@ -148,7 +144,14 @@ const Modal = (props) => {
     )
 }
 
-export default Modal
+export default Modal;
+
+
+
+
+
+
+
  // let Title,FullName,Specialty='';
     // if (props.isShown.doctors) {
     //     if (props.modalShow.operation === 'edit') {

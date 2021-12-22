@@ -12,9 +12,9 @@ const Doctors = (props) => {
 
         return props.doctors.map((doctor, index) => {
             const { name,specialty,phoneNumber } = doctor;
-            if (index>0) {
+            
                 return <tr key={index}>
-                    <td>{toPersianNumber(index)}</td>
+                    <td>{toPersianNumber(index+1)}</td>
                     <td>{name}</td>
                     <td>{specialty}</td>
                     <td>{phoneNumber}</td>
@@ -25,7 +25,7 @@ const Doctors = (props) => {
                     </td>
 
                 </tr>
-            }
+            
         })
     }
     const TableHeaderHandler = () => {
