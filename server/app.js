@@ -9,13 +9,14 @@ const { error } = require('console');
 var doctorRouter = require('./routes/doctor');
 var patientRouter = require('./routes/patient');
 var testroute = require('./routes/test')
-
+var cors= require('cors')
 var app = express();
 
 mongoose.connect('mongodb://localhost:27017/triage').catch(
   error => console.log(error)
 );
 // view engine setup
+app.use(cors());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 

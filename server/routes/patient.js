@@ -15,7 +15,8 @@ let privates = {
 
 
 router.post('/add', (req, res) => {
-    if (req.body.fullName === undefined || req.body.whichdoctor === undefined || req.body.nationalCode === undefined) {
+    if (typeof req.body.fullName === 'undefined' ||typeof req.body.whichdoctor === 'undefined' || typeof req.body.nationalCode === 'undefined'||
+    req.body.fullName.length ===0 ||req.body.whichdoctor.length ===0) {
         res.status(400).send({
             success: false,
             err: "اسم یا کدملی بیمار وارد نشده است یا موضوع مورد مراجعه ذکر نشده"
@@ -27,9 +28,9 @@ router.post('/add', (req, res) => {
             req.body.whichdoctor = [req.body.whichdoctor]
         }
 
-        
 
-        if (req.body.numberOfChildren === undefined || req.body.numberOfChildren.length === 0) {
+
+        if (typeof req.body.numberOfChildren === 'undefined' || req.body.numberOfChildren.length === 0) {
             patientServer.add(req.body.nationalCode, req.body.fullName, 0, req.body.whichdoctor, (errcode, errtext) => {
                 if (errcode) {
                     res.status(errcode).send({
@@ -79,7 +80,7 @@ router.get('/list', (req, res) => {
     })
 })
 router.post('/deActive', (req, res) => {
-    if (req.body.id === undefined || req.body.id.length === 0 || req.body.turn === undefined || req.body.turn.length === 0) {
+    if (typeof req.body.id === 'undefined' || req.body.id.length === 0 || typeof req.body.turn === 'undefined' || req.body.turn.length === 0) {
         res.status(400).send({
             success: false,
             err: "missing id or turn"
@@ -102,7 +103,8 @@ router.post('/deActive', (req, res) => {
 
 })
 router.post('/Active', (req, res) => {
-    if (req.body.id === undefined || req.body.id.length === 0 || req.body.turn === undefined || req.body.turn.length === 0) {
+    if (typeof req.body.id === 'undefined' || req.body.id.length === 0 || typeof req.body.turn === 'undefined' ||
+        req.body.turn.length === 0) {
         res.status(400).send({
             success: false,
             err: "missing id or turn"
@@ -125,6 +127,10 @@ router.post('/Active', (req, res) => {
 
 })
 router.post('/edit', (req, res) => {
-
+    if (typeof req.body.name === 'undefined', typeof req.body.numberOfChildren === 'undefined') {
+        res.status(400).send({ err: "فیلد های مورد نظر را پر کنید" })
+    } else {
+        res.status(200).send({ text: "ok" })
+    }
 })
 module.exports = router

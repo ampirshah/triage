@@ -99,14 +99,6 @@ methods.active = function (id, turn, callback) {
 
 module.exports = methods
 
-
-
-
-
-
-
-
-
 // patientModel.find((err, doctors) => {
     //     if (err) {
     //         callback(500, err, null)

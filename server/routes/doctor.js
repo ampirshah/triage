@@ -13,7 +13,7 @@ let privates = {
 
 router.post('/add', (req, res) => {
 
-    if (typeof req.body.phoneNumber === 'undefined' || req.body.fullName === undefined || req.body.specialty === undefined
+    if (typeof req.body.phoneNumber === 'undefined' || typeof req.body.fullName === "undefined" || typeof req.body.specialty === "undefined"
         || req.body.phoneNumber.length === 0 || req.body.phoneNumber.length === 0 || req.body.specialty.length === 0) {
         res.status(400).send({
             success: false,
@@ -54,7 +54,7 @@ router.post('/add', (req, res) => {
 
 
 router.post('/login', (req, res) => {
-    if (req.body.phoneNumber === 'undefined' || req.body.phoneNumber.length === 0) {
+    if (typeof req.body.phoneNumber === 'undefined' || req.body.phoneNumber.length === 0) {
         res.status(400).send({
             success: false,
             error: "لطفا فیلد  مورد نظر را صحیح  وکامل پر کنید",
@@ -69,7 +69,7 @@ router.post('/login', (req, res) => {
                         error: errtext
                     })
                 } else {
-                    if (req.body.password === undefined || req.body.password.length === 0) {
+                    if (typeof req.body.password === "undefined" || req.body.password.length === 0) {
                         res.status(400).send({
                             success: false,
                             error: "رمز را وارد نکردید"
@@ -101,7 +101,8 @@ router.post('/login', (req, res) => {
 
 router.post('/edit', (req, res) => {
 
-    if ((req.body.id === undefined || req.body.newPhoneNumber === undefined || req.body.newName === undefined || req.body.newspecilty === undefined) ||
+    if ((typeof req.body.id === "undefined" || typeof req.body.newPhoneNumber === "undefined" || typeof req.body.newName === " undefined" ||
+        typeof req.body.newspecilty === "undefined") ||
         (req.body.id.length === 0 || req.body.newPhoneNumber.length === 0 || req.body.newName.length === 0 || req.body.newspecilty.length === 0)) {
         res.status(400).send({
             success: false,
@@ -141,7 +142,7 @@ router.get('/list', (req, res) => {
 })
 
 router.post('/deactive', (req, res) => {
-    if (req.body.phoneNumber === undefined, req.body.phoneNumber.length === 0) {
+    if (typeof req.body.phoneNumber === "undefined", req.body.phoneNumber.length === 0) {
         res.status(400).send({
             success: false,
             error: "لطفا فیلد  مورد نظر را صحیح  وکامل پر کنید",
@@ -174,7 +175,7 @@ router.post('/deactive', (req, res) => {
 })
 
 router.post('/active', (req, res) => {
-    if (req.body.phoneNumber === undefined, req.body.phoneNumber.length === 0) {
+    if (typeof req.body.phoneNumber === "undefined", req.body.phoneNumber.length === 0) {
         res.status(400).send({
             success: false,
             error: "لطفا فیلد  مورد نظر را صحیح  وکامل پر کنید",
@@ -207,7 +208,7 @@ router.post('/active', (req, res) => {
 })
 
 router.get('/patientList', (req, res) => {
-    if (req.body.id === undefined || req.body.id.length === 0) {
+    if (typeof req.body.id === "undefined" || req.body.id.length === 0) {
         res.status(400).send({
             success: false,
             error: "missing id"
@@ -230,7 +231,7 @@ router.get('/patientList', (req, res) => {
 })
 
 router.post('/callForPatient', (req, res) => {
-    if (req.body.id === undefined || req.body.id.length === 0) {
+    if (typeof req.body.id === "undefined" || req.body.id.length === 0) {
         res.status(400).send({
             success: false,
             error: "missing id"
