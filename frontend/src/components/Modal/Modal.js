@@ -7,25 +7,13 @@ import { RiArrowDropDownLine } from 'react-icons/ri';
 const Modal = (props) => {
     let Title = '', Input1 = '', Input2 = '', Input3 = '', Submit = '';
     const [showList, setshowList] = useState(false)
-
-    ///Sort ?
-    const doctorsList = [];
-
-    for (let i in props.doctors) {
-        doctorsList.push(props.doctors[i].name)
-    }
-
-    const collator = new Intl.Collator('fa');
-    doctorsList.sort(collator.compare);
-    //console.log("sortedList", sortedList);
-
-    ///
-
+    
     switch (props.modalShow.operation) {
         case 'edit':
             if (props.isShown === 'doctors') {
                 Submit = props.submitDoctorHandler;
                 Title = 'ویرایش اطلاعات پزشک';
+                {console.log("MODAL,changed Doctror",props.changedDoctor)}
                 Input1 = <label>
                     ویرایش نام پزشک:
                     <input type='text' onChange={props.inputDoctorHandler} name='name' value={props.changedDoctor.name} autoComplete="off" />
@@ -58,10 +46,17 @@ const Modal = (props) => {
                         {console.log("changedPatient.doctor", props.changedPatient.doctor)}
                         <h5 onClick={() => setshowList(!showList)}>{toPersianNumber(props.changedPatient.doctor.filter(t => (t.selected === true)).length)} پزشک انتخاب شده <RiArrowDropDownLine /></h5>
                         <div className={showList ? style.MultiSelectShow : style.MultiSelectHide}>
-                            {props.doctorsList.map((d, i) => {
+                           
+                            {props.sortedDoctorsListEdit.map((d, i) => {
                                 let index = props.changedPatient.doctor.findIndex(pd => (pd.name === d));
                                 return <p className={(props.changedPatient.doctor[index] && props.changedPatient.doctor[index].selected === true) ? style.Selected : null} key={d} onClick={() => props.editSelectDoctorHandler(d)}>{d}</p>
                             })}
+                            
+                             {props.sortedDoctorsListAdd.filter(f=>!props.sortedDoctorsListEdit.includes(f)).map(d=>{
+                                 let index = props.changedPatient.doctor.findIndex(pd => (pd.name === d));
+                                 return <p className={(props.changedPatient.doctor[index] && props.changedPatient.doctor[index].selected === true) ? style.Selected : null} key={d} onClick={() => props.editSelectDoctorHandler(d)}>{d}</p>
+                             })}
+                            
                         </div>
                     </div>
                 </label>
@@ -107,9 +102,10 @@ const Modal = (props) => {
                         {console.log("changedPatient.doctor", props.changedPatient.doctor)}
                         <h5 onClick={() => setshowList(!showList)}>{toPersianNumber(props.changedPatient.doctor.filter(t => (t.selected === true)).length)} پزشک انتخاب شده <RiArrowDropDownLine /></h5>
                         <div className={showList ? style.MultiSelectShow : style.MultiSelectHide}>
-                            {props.doctorsList.map((d, i) => {
+                           
+                            {props.sortedDoctorsListAdd.map((d, i) => {
                                 let index = props.changedPatient.doctor.findIndex(pd => (pd.name === d));
-                                return <p className={(props.changedPatient.doctor[index] && props.changedPatient.doctor[index].selected === true) ? style.Selected : null} key={d} onClick={() => props.selectDoctorHandler(d)}>{d}</p>
+                                return <p className={(props.changedPatient.doctor[index] && props.changedPatient.doctor[index].selected === true) ? style.Selected : null} key={d} onClick={() => props.selectDoctorHandler(d)} >{d}</p>
                             })}
                         </div>
                     </div>
@@ -134,7 +130,7 @@ const Modal = (props) => {
                             {Input2}
                             {Input3}
 
-                            <button type='submit' form='Modal' >ثبت تغییرات</button>
+                            <button type='submit' form='Modal'>ثبت تغییرات</button>
                         </form>
                     </div>
 

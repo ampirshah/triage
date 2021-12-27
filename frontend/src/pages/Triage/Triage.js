@@ -95,15 +95,7 @@ const Triage = () => {
 
     const [patients,setPatients]=useState([])
 
-    // useEffect(() => {
-    //     axios.get('https://jsonplaceholder.typicode.com/posts')
-    //         .then(response => {
-    //             const doctorsList = response.data.slice(0, 5);
-        
-    //             setDoctors(doctorsList)
-    //         })
-    //         .catch(error => console.log("Error", error))
-    // }, [])
+    
 
     console.log("doctors", doctors)
     console.log('patients', patients);
@@ -115,12 +107,12 @@ const Triage = () => {
     });
 
     
-    const openEditModal = (pationt,index) => {
+    const openEditModal = (person,index) => {
       
         console.log("modal", index);
         setModalShow({ ...modalShow, index: index, show: true ,operation:'edit'});
-        setChangedDoctor({...doctors[index]});
-        setChangedPatient({...pationt});
+        setChangedDoctor({...person});
+        setChangedPatient({...person});
       
     }
     const openAddModal=(index)=>{
@@ -130,9 +122,8 @@ const Triage = () => {
     }
     
     
-
     const [changedDoctor, setChangedDoctor] = useState()
-    const [changedPatient,setChangedPatient] =useState()
+    const [changedPatient,setChangedPatient] = useState()
 
     console.log("changedPatient", changedPatient);
     
@@ -165,19 +156,19 @@ const Triage = () => {
         //if(changedPatient.doctor.includes(doctorName)===false)
         
         let index=changedPatient.doctor.findIndex(d=>(d.name===doctorName));
-        if(!changedPatient.doctor.find(d=>(d.name===doctorName))){
 
-            let temp={...changedPatient};
-            temp.doctor.push({name:doctorName , selected:true})
-            setChangedPatient(temp);
+        if(!changedPatient.doctor.find(d=>(d.name===doctorName))){
+            let temp=[...changedPatient.doctor];
+            temp.push({name:doctorName , selected:true})
+            setChangedPatient({doctor:temp})
             console.log("set value for the first time");
             
-        }else if(changedPatient.doctor[index]){
-            let temp={...changedPatient};
-            temp.doctor[index].selected=!temp.doctor[index].selected;
-            setChangedPatient(temp)
+        }else if(changedPatient.doctor){
+            let temp=[...changedPatient.doctor];
+            temp[index].selected=!temp[index].selected;
+            setChangedPatient({doctor:temp})
             console.log("toggle value");
-        }    
+        }
     }
     
     const editSelectDoctorHandler=(doctorName)=>{
@@ -188,24 +179,23 @@ const Triage = () => {
             let temp=[...changedPatient.doctor];
             temp.push({name:doctorName , selected:true})
             setChangedPatient({doctor: temp});
-            console.log("working2",changedPatient.doctor);
+            console.log("working1 ",changedPatient.doctor);
         }
         else if(changedPatient.doctor.find(d=>d.name===doctorName)){
             let temp=[...changedPatient.doctor];
             temp[index].selected=!temp[index].selected;
             setChangedPatient({doctor: temp});
-            console.log("working");
+            console.log("working2");
         } 
     }
 
     const submitDoctorHandler = (event, index) => {
         event.preventDefault();
-
+            
             let temp = [...doctors];
             temp[index]= changedDoctor
             setDoctors(temp);
             
-        
         console.log("doctors Changed :", doctors);
         setModalShow({ ...modalShow, show: false })
         const data = doctors
@@ -245,21 +235,29 @@ const Triage = () => {
             .catch(error => console.log("Erorr", error))
     }
     console.log("index", modalShow.index)
-    
-    ///Sort ?
-    const doctorsList = [];
 
-    for (let i in doctors) {
-        doctorsList.push(doctors[i].name)
+    //////Sorting Functions
+    const sortedDoctorsListAdd=()=>{
+        let doctorsList = [];
+        for (let i in doctors) {
+            doctorsList.push(doctors[i].name)
+        }
+        doctorsList.sort( (a, b) => a.localeCompare(b, 'fr'));
+        return doctorsList;
     }
-
-    // const collator = new Intl.Collator('fa');
-    // const sortedList=doctorsList.sort(collator.compare);
-    // console.log("sortedList", sortedList);
-
-    ///
-
+    const sortedDoctorsListEdit=()=>{
+        let SelectedDoctorsList=[];
+        if(patients[modalShow.index]){
+            for(let i in patients[modalShow.index].doctor){
+                SelectedDoctorsList.push(patients[modalShow.index].doctor[i].name)
+            }
+        }
+        SelectedDoctorsList.sort( (a, b) => a.localeCompare(b, 'fr'));
+        
+        return SelectedDoctorsList;
+    }
     
+    //////////////////////
     
     const toDoctorsTable=()=>{
         setIsShown('doctors');
@@ -276,7 +274,7 @@ const Triage = () => {
     </div>
 
 
-    let NavLink=<Link to='/Doctor'>پزشک هستید؟</Link>
+    let NavLink=<Link to='/Login'>پزشک هستید؟</Link>
     return (
         <Container MenuButtons={MenuButtons} Link={NavLink} Title='تریاژ'>
 
@@ -294,7 +292,8 @@ const Triage = () => {
                                 inputPatientHandler={(event) => inputPatientHandler(event,modalShow.index)}
                                 selectDoctorHandler={selectDoctorHandler}
                                 editSelectDoctorHandler={editSelectDoctorHandler}
-                                doctorsList={doctorsList}
+                                sortedDoctorsListAdd={sortedDoctorsListAdd()}
+                                sortedDoctorsListEdit={sortedDoctorsListEdit()}
                                 />
             : null}
 
@@ -427,3 +426,14 @@ export default Triage;
 //         setChangedPatient(temp);
 //      }
 //  }
+
+//0
+// useEffect(() => {
+    //     axios.get('https://jsonplaceholder.typicode.com/posts')
+    //         .then(response => {
+    //             const doctorsList = response.data.slice(0, 5);
+        
+    //             setDoctors(doctorsList)
+    //         })
+    //         .catch(error => console.log("Error", error))
+    // }, [])

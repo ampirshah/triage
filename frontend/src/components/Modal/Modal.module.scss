@@ -118,9 +118,12 @@ $background-color: #9c88ff;
     }
 
     input {
-        border: 1px solid $dark-color;
+        border: 1px solid rgba($color: $dark-color, $alpha: 0.5);
         border-radius: 3px;
         padding: 8px 14px;
+    }
+    :focus{
+        outline: $dark-color solid 1px;
     }
 
     button {

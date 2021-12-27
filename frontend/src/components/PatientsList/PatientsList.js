@@ -3,28 +3,14 @@ import style from './PatientsList.module.scss';
 import { toPersianNumber } from '../../helpers/action';
 import { FiEdit } from 'react-icons/fi';
 import { IoPersonAddOutline } from 'react-icons/io5';
-import Doctors from '../DoctorsList/DoctorsList';
+
 
 const PatientsList = (props) => {
 
-    // const DoctorsHandler=()=>{
-
-    //     if(props.doctors.name){
-    //         return props.doctors.map((doctor, index) => {
-    //             const { name} = doctor;
-    //             if (index>0) {
-    //                 return <tr key={index}>  
-    //                     <td>{name}</td>
-
-    //                 </tr>
-    //             }
-    //         })
-    //     }
-    // }
     const TableHandler = () => {
-
+        
         return props.patients.map((patient, index) => {
-
+           
             const { name, nationalCode, turn, doctor, status } = patient;
 
                 return <tr key={index}>
@@ -38,13 +24,7 @@ const PatientsList = (props) => {
                     })}
                     </td>
                     <td>{status}</td>
-                    {/* <td>{()=>{return (props.patients.doctor).map((pDoctor,i)=>{
-                    //const {dName,dVisit} = pDoctor;
-                    return <tr key={i}>
-                        <td>{pDoctor}</td>
-                        </tr>
-                })}}</td> */}
-
+                    
                     <td className={style.EditButton}>
                         <button onClick={() => props.openEditModal(patient,index)}><FiEdit /></button>
                     </td>
@@ -66,12 +46,17 @@ const PatientsList = (props) => {
             <div className={style.Patients}>
 
                 <h2> لیست بیماران </h2>
+                {props.patients.length===0 ? 
+                <p>بیماری ثبت نشده است. لطفا با کلیک روی دکمه زیر بیمار را اضافه کنید.</p>
+                :
                 <table>
-                    <tbody>
-                        <tr>{TableHeaderHandler()}</tr>
-                        {TableHandler()}
-                    </tbody>
-                </table>
+                <tbody>
+                    <tr>{TableHeaderHandler()}</tr>
+                    {TableHandler()}
+                </tbody>
+            </table>
+            }
+               
 
                 <div className={style.AddButtonContainer}>
                     <button className={style.AddButton}

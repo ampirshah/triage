@@ -10,7 +10,7 @@ function App() {
     <div className={style.App}>
       <Routes>
         <Route path='/' element={<Navigate replace to="/Triage" />} />
-        {/* <Route path='/' element={<Login />} /> */}
+        <Route path='/Login' element={<Login />} />
         <Route path='/Triage' element={<Triage />} />
         <Route path='/Doctor' element={<Doctor />} />
 
