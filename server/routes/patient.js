@@ -15,8 +15,8 @@ let privates = {
 
 
 router.post('/add', (req, res) => {
-    if (typeof req.body.fullName === 'undefined' ||typeof req.body.whichdoctor === 'undefined' || typeof req.body.nationalCode === 'undefined'||
-    req.body.fullName.length ===0 ||req.body.whichdoctor.length ===0) {
+    if (typeof req.body.fullName === 'undefined' || typeof req.body.whichdoctor === 'undefined' || typeof req.body.nationalCode === 'undefined' ||
+        req.body.fullName.length === 0 || req.body.whichdoctor.length === 0) {
         res.status(400).send({
             success: false,
             err: "اسم یا کدملی بیمار وارد نشده است یا موضوع مورد مراجعه ذکر نشده"
@@ -127,10 +127,11 @@ router.post('/Active', (req, res) => {
 
 })
 router.post('/edit', (req, res) => {
-    if (typeof req.body.name === 'undefined', typeof req.body.numberOfChildren === 'undefined') {
+    if (typeof req.body.name === 'undefined' || typeof req.body.numberOfChildren === 'undefined') {
         res.status(400).send({ err: "فیلد های مورد نظر را پر کنید" })
     } else {
         res.status(200).send({ text: "ok" })
     }
 })
+
 module.exports = router

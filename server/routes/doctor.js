@@ -142,7 +142,7 @@ router.get('/list', (req, res) => {
 })
 
 router.post('/deactive', (req, res) => {
-    if (typeof req.body.phoneNumber === "undefined", req.body.phoneNumber.length === 0) {
+    if (typeof req.body.phoneNumber === "undefined" || req.body.phoneNumber.length === 0) {
         res.status(400).send({
             success: false,
             error: "لطفا فیلد  مورد نظر را صحیح  وکامل پر کنید",
@@ -175,7 +175,7 @@ router.post('/deactive', (req, res) => {
 })
 
 router.post('/active', (req, res) => {
-    if (typeof req.body.phoneNumber === "undefined", req.body.phoneNumber.length === 0) {
+    if (typeof req.body.phoneNumber === "undefined" || req.body.phoneNumber.length === 0) {
         res.status(400).send({
             success: false,
             error: "لطفا فیلد  مورد نظر را صحیح  وکامل پر کنید",
@@ -237,7 +237,7 @@ router.post('/callForPatient', (req, res) => {
             error: "missing id"
         });
     } else {
-        doctorService.patientList(req.body.id, (errcode, errtext, patients) => {
+        doctorService.callForPatient(req.body.id, (errcode, errtext, patients) => {
             if (errcode) {
                 res.status(errcode).send({
                     success: false,
@@ -251,5 +251,53 @@ router.post('/callForPatient', (req, res) => {
             }
         })
     }
+})
+
+router.post('/patiententer', (req, res) => {
+    if (typeof req.body.turn === 'undefined' || typeof req.body.id === 'undefined') {
+        res.status(400).send({
+            success: false,
+            err: 'فیلد های مورد نظر را بفرستید'
+        })
+    } else {
+        doctorService.patiententer(req.body.id, req.body.turn, (errorcode, errortext, patient) => {
+            if (errorcode) {
+                res.status(errorcode).send({
+                    success: false,
+                    err: errortext
+                })
+            } else {
+                res.status(200).send({
+                    success: true,
+                    update: patient
+                })
+            }
+        })
+    }
+
+})
+
+router.post('/patientexit', (req, res) => {
+    if (typeof req.body.turn === 'undefined' || typeof req.body.id === 'undefined') {
+        res.status(400).send({
+            success: false,
+            err: 'فیلد های مورد نظر را بفرستید'
+        })
+    } else {
+        doctorService.patiententer(req.body.id, req.body.turn, (errorcode, errortext, patient) => {
+            if (errorcode) {
+                res.status(errorcode).send({
+                    success: false,
+                    err: errortext
+                })
+            } else {
+                res.status(200).send({
+                    success: true,
+                    update: patient
+                })
+            }
+        })
+    }
+
 })
 module.exports = router
