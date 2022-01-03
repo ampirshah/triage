@@ -7,12 +7,13 @@ import {RiHealthBookLine} from 'react-icons/ri';
 import {MdOutlineSick} from 'react-icons/md';
 import style from './Triage.module.scss';
 import Container from '../../hoc/Container/Container';
-import { toPersianNumber } from '../../helpers/action';
-
+import { searcher, toPersianNumber } from '../../helpers/action';
+import {seracher} from '../../helpers/action'
 import Modal from '../../components/Modal/Modal';
 
 const Triage = () => {
-    const [isShown, setIsShown] = useState('doctors')
+    const [isShown, setIsShown] = useState('doctors');
+    
     const testDoctors=[{
         id:1,
         name:'ستایش ابویی',
@@ -27,7 +28,7 @@ const Triage = () => {
     },
     {
         id:3,
-        name:'محمد محمدی',
+        name:'ستاره محمدی',
         phoneNumber:'09111111111',
         specialty:'دندانپزشک',
     },
@@ -108,15 +109,16 @@ const Triage = () => {
 
     
     const openEditModal = (person,index) => {
-      
         console.log("modal", index);
+        setSearchValue('');
         setModalShow({ ...modalShow, index: index, show: true ,operation:'edit'});
         setChangedDoctor({...person});
         setChangedPatient({...person});
       
     }
     const openAddModal=(index)=>{
-        setModalShow({ ...modalShow, index: index, show: true,operation:'add' });
+        setSearchValue('');
+        setModalShow({ ...modalShow, index: index, show: true ,operation:'add' });
         setChangedDoctor(initialDoctor);
         setChangedPatient(initialPatient);
     }
@@ -127,7 +129,7 @@ const Triage = () => {
 
     console.log("changedPatient", changedPatient);
     
-    const inputDoctorHandler = (event,index) => {
+    const inputDoctorHandler = (event) => {
             console.log("[event.target.name]",event.target.name);
             setChangedDoctor({
                 ...changedDoctor,
@@ -135,11 +137,10 @@ const Triage = () => {
             });
            
             console.log("changedDoctor", changedDoctor);
-
     }
 
    
-    const inputPatientHandler=(event,index)=>{
+    const inputPatientHandler=(event)=>{
         
         setChangedPatient({
             ...changedPatient,
@@ -154,21 +155,21 @@ const Triage = () => {
         /* checking if the doctor is not chosen or if it has been deSelected*/
 
         //if(changedPatient.doctor.includes(doctorName)===false)
-        
         let index=changedPatient.doctor.findIndex(d=>(d.name===doctorName));
 
         if(!changedPatient.doctor.find(d=>(d.name===doctorName))){
             let temp=[...changedPatient.doctor];
             temp.push({name:doctorName , selected:true})
-            setChangedPatient({doctor:temp})
-            console.log("set value for the first time");
+            setChangedPatient({...changedPatient,doctor:temp})
+            console.log("add-1",changedPatient);
             
         }else if(changedPatient.doctor){
             let temp=[...changedPatient.doctor];
             temp[index].selected=!temp[index].selected;
-            setChangedPatient({doctor:temp})
-            console.log("toggle value");
+            setChangedPatient({...changedPatient,doctor:temp})
+            console.log("add-2",changedPatient);
         }
+        setSearchValue('');
     }
     
     const editSelectDoctorHandler=(doctorName)=>{
@@ -178,13 +179,13 @@ const Triage = () => {
         if(!changedPatient.doctor.find(d=>d.name===doctorName)){
             let temp=[...changedPatient.doctor];
             temp.push({name:doctorName , selected:true})
-            setChangedPatient({doctor: temp});
+            setChangedPatient({...changedPatient,doctor: temp});
             console.log("working1 ",changedPatient.doctor);
         }
         else if(changedPatient.doctor.find(d=>d.name===doctorName)){
             let temp=[...changedPatient.doctor];
             temp[index].selected=!temp[index].selected;
-            setChangedPatient({doctor: temp});
+            setChangedPatient({...changedPatient,doctor: temp});
             console.log("working2");
         } 
     }
@@ -237,28 +238,34 @@ const Triage = () => {
     console.log("index", modalShow.index)
 
     //////Sorting Functions
-    const sortedDoctorsListAdd=()=>{
-        let doctorsList = [];
-        for (let i in doctors) {
-            doctorsList.push(doctors[i].name)
-        }
-        doctorsList.sort( (a, b) => a.localeCompare(b, 'fr'));
-        return doctorsList;
-    }
-    const sortedDoctorsListEdit=()=>{
+    
+
+    const sortedDoctorsList=()=>{
+        let DoctorsList = [];
         let SelectedDoctorsList=[];
+
+        for (let i in doctors) {
+            DoctorsList.push(doctors[i].name)
+        }
+        DoctorsList.sort( (a, b) => a.localeCompare(b, 'fr'));
+        
         if(patients[modalShow.index]){
             for(let i in patients[modalShow.index].doctor){
+                if(changedPatient?.doctor[i].selected===true){
                 SelectedDoctorsList.push(patients[modalShow.index].doctor[i].name)
+            }
             }
         }
         SelectedDoctorsList.sort( (a, b) => a.localeCompare(b, 'fr'));
+        let AllDoctorsList=SelectedDoctorsList.concat(DoctorsList.filter(f => !SelectedDoctorsList.includes(f)))
         
-        return SelectedDoctorsList;
+        return AllDoctorsList;
     }
-    
+   
     //////////////////////
+    const [searchValue, setSearchValue] = useState('');
     
+
     const toDoctorsTable=()=>{
         setIsShown('doctors');
         setModalShow({...modalShow,show:false})
@@ -292,8 +299,10 @@ const Triage = () => {
                                 inputPatientHandler={(event) => inputPatientHandler(event,modalShow.index)}
                                 selectDoctorHandler={selectDoctorHandler}
                                 editSelectDoctorHandler={editSelectDoctorHandler}
-                                sortedDoctorsListAdd={sortedDoctorsListAdd()}
-                                sortedDoctorsListEdit={sortedDoctorsListEdit()}
+                                sortedDoctorsList={sortedDoctorsList()}
+                                searchValue={searchValue}
+                                setSearchValueHandler={(event)=>setSearchValue(event.target.value)}
+
                                 />
             : null}
 
@@ -437,3 +446,12 @@ export default Triage;
     //         })
     //         .catch(error => console.log("Error", error))
     // }, [])
+//7
+// const selectFromSearchHandler=()=>{
+        
+//     if(changedPatient.doctor.filter(d => d.name === searchValue)){
+//         selectDoctorHandler(searchValue);
+//         //setSerachValue(''); 
+//     }
+    
+// }

@@ -1,3 +1,32 @@
+const searcher=(list,value)=>{
+    let result =[];
+    let regex=new RegExp(`^${value}.*|^.* ${value}.*`);
+   
+        for(let i = 0; i < list.length; i++) {
+            //console.log("regex-test",list[i],value,regex.test(list[i]));
+            if(regex.test(list[i])){
+                result.push(list[i]);
+            
+          }
+        }
+        
+        //console.log("regex",regex);
+        return result;
+    
+
+    // let result=[];
+    // for(var i = 0; i < list.length; i++) {
+    //     if(list[i].search(value) > -1){
+    //         result.push(list[i]);
+    //     }
+    //   }
+      
+    //   console.log("regex",regex.test(value));
+    //   return result;
+}
+export { searcher };
+
+
 const toPersianNumber = (number) => {
 
     if (number === undefined)
@@ -53,3 +82,4 @@ const toEnglishNumber = (number) => {
 }
 
 export { toEnglishNumber }
+

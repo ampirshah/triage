@@ -66,12 +66,12 @@ $sidebar-width: 250px;
                 z-index: 50;
             }
             .ShowButton {
-                margin-top: 20px;
                 right: 218px;
+                transition:right 1s ease-in-out;
             }
             .HideButton {
                 right: -10px;
-                
+                transition:right 1s ease-in-out;
             }
             .Arrow {
                 font-size: 22px;
@@ -87,6 +87,7 @@ $sidebar-width: 250px;
                 align-items: center;
                 position: static;
                 z-index: 30;
+                transition:width 1s ease-in-out;
 
                 div {
                     display: flex;
@@ -126,6 +127,26 @@ $sidebar-width: 250px;
                     button:hover {
                         color: $background-color;
                     }
+                }
+            }
+            .HideSideBar{
+                background-color: $dark-color;
+                width: 0;
+                height: 100vh;
+                color: white;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                position: static;
+                z-index: 30;
+                transition:width 1s ease-in-out;
+
+  
+                div{
+                    display: none;
+                }
+                .Menu{
+                    display: none;
                 }
             }
         }

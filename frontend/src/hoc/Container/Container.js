@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Link } from 'react-router-dom';
 
 import style from './Container.module.scss';
-import {IoIosArrowBack} from 'react-icons/io'
+import { IoIosArrowBack } from 'react-icons/io'
 import { RiHospitalLine } from 'react-icons/ri';
 
 const Container = (props) => {
@@ -13,7 +13,7 @@ const Container = (props) => {
         <div className={style.Container}>
             <div className={style.Toolbar}>
                 <div>
-                    <h1><RiHospitalLine/> نام سایت</h1>
+                    <h1><RiHospitalLine /> نام سایت</h1>
                 </div>
 
                 <div className={style.User}>
@@ -24,14 +24,18 @@ const Container = (props) => {
             </div>
             <div className={style.Dashboard}>
                 <div className={style.SideBarContainer}>
-                    {showSideBar ? <div className={style.SideBar}>
+                    <div className={showSideBar ?style.SideBar:style.HideSideBar}>
                         <div>
                             <ul className={style.Menu}>
                                 {props.MenuButtons}
                             </ul>
                         </div>
-                    </div> : null}
-                    <button className={showSideBar ? style.ShowButton : style.HideButton} onClick={() => setShowSideBar(!showSideBar)}><IoIosArrowBack className={style.Arrow}/></button>
+                    </div>
+                    <button
+                        className={showSideBar ? style.ShowButton : style.HideButton}
+                        onClick={() => setShowSideBar(!showSideBar)}>
+                        <IoIosArrowBack className={style.Arrow} />
+                    </button>
                 </div>
 
                 <div className={style.Content}>
