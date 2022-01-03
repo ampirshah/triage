@@ -103,13 +103,15 @@ router.post('/edit', (req, res) => {
 
     if ((typeof req.body.id === "undefined" || typeof req.body.newPhoneNumber === "undefined" || typeof req.body.newName === " undefined" ||
         typeof req.body.newspecilty === "undefined") ||
-        (req.body.id.length === 0 || req.body.newPhoneNumber.length === 0 || req.body.newName.length === 0 || req.body.newspecilty.length === 0)) {
+        (req.body.id.length === 0 || req.body.newPhoneNumber.length === 0 ||
+            req.body.newName.length === 0 || req.body.newspecilty.length === 0)) {
         res.status(400).send({
             success: false,
             error: "اطلاعات را کامل وارد کنید",
         })
     } else {
-        doctorService.edit(req.body.id, req.body.newPhoneNumber, req.body.newName, req.body.newspecilty, (errcode, errtext, newrecord) => {
+        doctorService.edit(req.body.id, req.body.newPhoneNumber, req.body.newName, req.body.newspecilty,
+            (errcode, errtext, newrecord) => {
             if (errcode) {
                 res.status(errcode).send({
                     success: false,
@@ -122,7 +124,6 @@ router.post('/edit', (req, res) => {
                 })
             }
         })
-
     }
 })
 
