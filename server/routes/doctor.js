@@ -4,16 +4,16 @@ var router = express.Router();
 let persianjs = require("persianjs");
 const doctor = require('../models/doctor');
 let doctorService = require('../server/doctor');
-
+const pass = require('../passwords/password');
 let privates = {
     verifyPhone: phone => {
         return /^[0][9][0-9]{9}$/.test(phone)
     }
 };
 
-router.post('/adddoctor', (req, res) => {
+router.post('/add', (req, res) => {
 
-    if (typeof req.body.phoneNumber === 'undefined' || req.body.fullName === undefined || req.body.specialty === undefined
+    if (typeof req.body.phoneNumber === 'undefined' || typeof req.body.fullName === "undefined" || typeof req.body.specialty === "undefined"
         || req.body.phoneNumber.length === 0 || req.body.phoneNumber.length === 0 || req.body.specialty.length === 0) {
         res.status(400).send({
             success: false,
@@ -53,8 +53,8 @@ router.post('/adddoctor', (req, res) => {
 })
 
 
-router.post('/logdoctor', (req, res) => {
-    if (req.body.phoneNumber === 'undefined' || req.body.phoneNumber.length === 0) {
+router.post('/login', (req, res) => {
+    if (typeof req.body.phoneNumber === 'undefined' || req.body.phoneNumber.length === 0) {
         res.status(400).send({
             success: false,
             error: "لطفا فیلد  مورد نظر را صحیح  وکامل پر کنید",
@@ -62,17 +62,32 @@ router.post('/logdoctor', (req, res) => {
         })
     } else {
         if (privates.verifyPhone(req.body.phoneNumber)) {
-            doctorService.log(req.body.phoneNumber, (errcode, errtext) => {
+            doctorService.login(req.body.phoneNumber, (errcode, errtext) => {
                 if (errcode) {
                     res.status(errcode).send({
                         success: false,
                         error: errtext
                     })
                 } else {
-                    res.status(200).send({
-                        success: true,
-                        text: "شماره وارد شده صحیح است"
-                    })
+                    if (typeof req.body.password === "undefined" || req.body.password.length === 0) {
+                        res.status(400).send({
+                            success: false,
+                            error: "رمز را وارد نکردید"
+                        });
+                    } else {
+                        if (pass === req.body.password) {
+                            res.status(200).send({
+                                success: true,
+                                text: "شماره وارد شده صحیح است"
+                            })
+                        } else {
+                            res.status(400).send({
+                                success: false,
+                                error: "رمز وارد شده صحیح نیست"
+                            });
+                        }
+                    }
+
                 }
             })
         } else {
@@ -84,16 +99,19 @@ router.post('/logdoctor', (req, res) => {
     }
 })
 
-router.post('/editdoctor', (req, res) => {
+router.post('/edit', (req, res) => {
 
-    if ((req.body.id === undefined || req.body.newPhoneNumber === undefined || req.body.newName === undefined || req.body.newspecilty === undefined) ||
-        (req.body.id.length === 0 || req.body.newPhoneNumber.length === 0 || req.body.newName.length === 0 || req.body.newspecilty.length === 0)) {
+    if ((typeof req.body.id === "undefined" || typeof req.body.newPhoneNumber === "undefined" || typeof req.body.newName === " undefined" ||
+        typeof req.body.newspecilty === "undefined") ||
+        (req.body.id.length === 0 || req.body.newPhoneNumber.length === 0 ||
+            req.body.newName.length === 0 || req.body.newspecilty.length === 0)) {
         res.status(400).send({
             success: false,
             error: "اطلاعات را کامل وارد کنید",
         })
     } else {
-        doctorService.edit(req.body.id, req.body.newPhoneNumber, req.body.newName, req.body.newspecilty, (errcode, errtext, newrecord) => {
+        doctorService.edit(req.body.id, req.body.newPhoneNumber, req.body.newName, req.body.newspecilty,
+            (errcode, errtext, newrecord) => {
             if (errcode) {
                 res.status(errcode).send({
                     success: false,
@@ -106,12 +124,11 @@ router.post('/editdoctor', (req, res) => {
                 })
             }
         })
-
     }
 })
 
 
-router.post('/doctorlist', (req, res) => {
+router.get('/list', (req, res) => {
     doctorService.list((errcode, errtext, data) => {
         if (errcode) {
             res.status(errcode).send({
@@ -125,8 +142,8 @@ router.post('/doctorlist', (req, res) => {
     })
 })
 
-router.post('/doctordel', (req, res) => {
-    if (req.body.phoneNumber === undefined, req.body.phoneNumber.length === 0) {
+router.post('/deactive', (req, res) => {
+    if (typeof req.body.phoneNumber === "undefined" || req.body.phoneNumber.length === 0) {
         res.status(400).send({
             success: false,
             error: "لطفا فیلد  مورد نظر را صحیح  وکامل پر کنید",
@@ -134,7 +151,7 @@ router.post('/doctordel', (req, res) => {
         })
     } else {
         if (privates.verifyPhone(req.body.phoneNumber)) {
-            doctorService.del(req.body.phoneNumber, (errcode, errtext, data) => {
+            doctorService.deactive(req.body.phoneNumber, (errcode, errtext, data) => {
                 if (errcode) {
                     res.status(errcode).send({
                         success: false,
@@ -158,4 +175,130 @@ router.post('/doctordel', (req, res) => {
 
 })
 
+router.post('/active', (req, res) => {
+    if (typeof req.body.phoneNumber === "undefined" || req.body.phoneNumber.length === 0) {
+        res.status(400).send({
+            success: false,
+            error: "لطفا فیلد  مورد نظر را صحیح  وکامل پر کنید",
+            text: "  شماره 11 رقم و با 09 شروع شود"
+        })
+    } else {
+        if (privates.verifyPhone(req.body.phoneNumber)) {
+            doctorService.active(req.body.phoneNumber, (errcode, errtext, data) => {
+                if (errcode) {
+                    res.status(errcode).send({
+                        success: false,
+                        err: errtext
+                    })
+                } else {
+                    res.status(200).send({
+                        success: true,
+                        doctor: data
+                    })
+                }
+            })
+        } else {
+            res.status(400).send({
+                success: false,
+                error: "شماره وارد شده اشتباه است"
+            });
+        }
+
+    }
+
+})
+
+router.get('/patientList', (req, res) => {
+    if (typeof req.body.id === "undefined" || req.body.id.length === 0) {
+        res.status(400).send({
+            success: false,
+            error: "missing id"
+        });
+    } else {
+        doctorService.patientList(req.body.id, (errcode, errtext, patients) => {
+            if (errcode) {
+                res.status(errcode).send({
+                    success: false,
+                    err: errtext
+                })
+            } else {
+                res.status(200).send({
+                    success: true,
+                    list: patients
+                })
+            }
+        })
+    }
+})
+
+router.post('/callForPatient', (req, res) => {
+    if (typeof req.body.id === "undefined" || req.body.id.length === 0) {
+        res.status(400).send({
+            success: false,
+            error: "missing id"
+        });
+    } else {
+        doctorService.callForPatient(req.body.id, (errcode, errtext, patients) => {
+            if (errcode) {
+                res.status(errcode).send({
+                    success: false,
+                    err: errtext
+                })
+            } else {
+                res.status(200).send({
+                    success: true,
+                    nextPatient: patients[0]
+                })
+            }
+        })
+    }
+})
+
+router.post('/patiententer', (req, res) => {
+    if (typeof req.body.turn === 'undefined' || typeof req.body.id === 'undefined') {
+        res.status(400).send({
+            success: false,
+            err: 'فیلد های مورد نظر را بفرستید'
+        })
+    } else {
+        doctorService.patiententer(req.body.id, req.body.turn, (errorcode, errortext, patient) => {
+            if (errorcode) {
+                res.status(errorcode).send({
+                    success: false,
+                    err: errortext
+                })
+            } else {
+                res.status(200).send({
+                    success: true,
+                    update: patient
+                })
+            }
+        })
+    }
+
+})
+
+router.post('/patientexit', (req, res) => {
+    if (typeof req.body.turn === 'undefined' || typeof req.body.id === 'undefined') {
+        res.status(400).send({
+            success: false,
+            err: 'فیلد های مورد نظر را بفرستید'
+        })
+    } else {
+        doctorService.patiententer(req.body.id, req.body.turn, (errorcode, errortext, patient) => {
+            if (errorcode) {
+                res.status(errorcode).send({
+                    success: false,
+                    err: errortext
+                })
+            } else {
+                res.status(200).send({
+                    success: true,
+                    update: patient
+                })
+            }
+        })
+    }
+
+})
 module.exports = router

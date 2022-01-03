@@ -1,27 +1,38 @@
 const patientModel = require("../models/patient");
 const doctor = require("../models/doctor");
+var ObjectId = require('mongodb').ObjectId;
+const mongoose = require('mongoose');
+
 let methods = {};
 
-methods.add = function (nationalCode,fullName, childs, whichdoctor, callback) {
+methods.add = function (nationalCode, fullName, childs, whichdoctor, callback) {
     let newpatient = new patientModel({
-        nationalCode:nationalCode,
+        nationalCode: nationalCode,
         fullName: fullName,
         numberOfChildren: childs
     })
+    whichdoctor = whichdoctor.map(s => mongoose.Types.ObjectId(s));
 
-    //{ specialty:{$match: whichdoctor}nationalCoded:nationalCoded,
 
-    doctor.find({ specialty: { $in: whichdoctor } }, (err, doctor) => {
+
+    doctor.find({ "_id": { $in: whichdoctor } }).lean().exec((err, doctor) => {
         if (err) {
             console.log(err);
         } else {
             if (doctor) {
-                console.log("doctoooooor::::::");
-                console.log("founded doc" + ":" + doctor);
-                for (let i in doctor) {
-                    console.log(i);
-                    newpatient.needTobeVisitBy.push({ doctor: doctor[i]._id })
-                }
+                // console.log("doctoooooor::::::");
+                // console.log("founded doc" + ":" + doctor);
+                /// implimante with map
+
+                doctor.map(d => {
+                    // console.log(d);
+                    newpatient.needTobeVisitBy.push({ doctor: d })
+                })
+
+                // for (let i in doctor) {
+                //     // console.log(i);
+                //     newpatient.needTobeVisitBy.push({ doctor: doctor[i]._id })
+                // }
 
                 newpatient.save((err, result) => {
                     if (err) {
@@ -44,7 +55,7 @@ methods.add = function (nationalCode,fullName, childs, whichdoctor, callback) {
 
 methods.list = function (callback) {
 
-    patientModel.find({ active: true }).populate({ path: 'needTobeVisitBy.doctor', select: ['fullName', 'specialty'] }).exec((err, doctors) => {
+    patientModel.find({ active: true }).populate({ path: 'needTobeVisitBy.doctor', select: ['fullName', 'specialty'] }).lean().exec((err, doctors) => {
         if (err) {
             console.log("hello from error");
             callback(500, err, null)
@@ -55,16 +66,38 @@ methods.list = function (callback) {
 
 }
 
+methods.deActive = function (id, turn, callback) {
+    patientModel.findOneAndUpdate({ _id: ObjectId(id), turn: turn }, { active: false }).lean().exec((err, patient) => {
+        if (err) {
+            callback(500, err)
+        } else {
+            if (patient) {
+                callback(null, "کاربر غیرفعال شد")
+            } else {
+                callback(400, "بیمار یافت نشد")
+            }
+
+        }
+    })
+
+}
+
+methods.active = function (id, turn, callback) {
+    patientModel.findOneAndUpdate({ _id: ObjectId(id), turn: turn }, { active: true }).lean().exec((err, patient) => {
+        if (err) {
+            callback(500, err)
+        } else {
+            if (patient) {
+                callback(null, "کاربر فعال شد")
+            } else {
+                callback(400, "بیمار یافت نشد")
+            }
+
+        }
+    })
+}
 
 module.exports = methods
-
-
-
-
-
-
-
-
 
 // patientModel.find((err, doctors) => {
     //     if (err) {
