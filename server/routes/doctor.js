@@ -1,0 +1,161 @@
+const { log } = require('debug');
+var express = require('express');
+var router = express.Router();
+let persianjs = require("persianjs");
+const doctor = require('../models/doctor');
+let doctorService = require('../server/doctor');
+
+let privates = {
+    verifyPhone: phone => {
+        return /^[0][9][0-9]{9}$/.test(phone)
+    }
+};
+
+router.post('/adddoctor', (req, res) => {
+
+    if (typeof req.body.phoneNumber === 'undefined' || req.body.fullName === undefined || req.body.specialty === undefined
+        || req.body.phoneNumber.length === 0 || req.body.phoneNumber.length === 0 || req.body.specialty.length === 0) {
+        res.status(400).send({
+            success: false,
+            error: "لطفا فیلد های مورد نظر را صحیح  وکامل پر کنید",
+            text: " اسم باید از 5 کلمه بیشتر باشد و شماره 11 رقم و با 09 شروع شود"
+        })
+    }
+    else {
+        console.log(req.body.phoneNumber + " : " + req.body.fullName + " : " + req.body.specialty);
+
+        console.log(req.body.phoneNumber + typeof req.body.phoneNumber);
+        req.body.phoneNumber = persianjs(req.body.phoneNumber).toEnglishNumber().toString();
+        console.log(req.body.phoneNumber + typeof req.body.phoneNumber);
+        if (privates.verifyPhone(req.body.phoneNumber)) {
+
+            doctorService.add(req.body.phoneNumber, req.body.fullName, req.body.specialty, (errcode, errtext, ifexist) => {
+                if (errcode) {
+                    res.status(errcode).send({
+                        success: false,
+                        err: errtext,
+                        ifExist: ifexist
+                    })
+                } else {
+                    res.status(200).send({
+                        success: true,
+                        text: " دکتر جدید اضافه شد"
+                    })
+                }
+            })
+        } else {
+            res.status(400).send({
+                success: false,
+                error: "شماره وارد شده اشتباه است"
+            });
+        }
+    }
+})
+
+
+router.post('/logdoctor', (req, res) => {
+    if (req.body.phoneNumber === 'undefined' || req.body.phoneNumber.length === 0) {
+        res.status(400).send({
+            success: false,
+            error: "لطفا فیلد  مورد نظر را صحیح  وکامل پر کنید",
+            text: "  شماره 11 رقم و با 09 شروع شود"
+        })
+    } else {
+        if (privates.verifyPhone(req.body.phoneNumber)) {
+            doctorService.log(req.body.phoneNumber, (errcode, errtext) => {
+                if (errcode) {
+                    res.status(errcode).send({
+                        success: false,
+                        error: errtext
+                    })
+                } else {
+                    res.status(200).send({
+                        success: true,
+                        text: "شماره وارد شده صحیح است"
+                    })
+                }
+            })
+        } else {
+            res.status(400).send({
+                success: false,
+                error: "شماره وارد شده اشتباه است"
+            });
+        }
+    }
+})
+
+router.post('/editdoctor', (req, res) => {
+
+    if ((req.body.id === undefined || req.body.newPhoneNumber === undefined || req.body.newName === undefined || req.body.newspecilty === undefined) ||
+        (req.body.id.length === 0 || req.body.newPhoneNumber.length === 0 || req.body.newName.length === 0 || req.body.newspecilty.length === 0)) {
+        res.status(400).send({
+            success: false,
+            error: "اطلاعات را کامل وارد کنید",
+        })
+    } else {
+        doctorService.edit(req.body.id, req.body.newPhoneNumber, req.body.newName, req.body.newspecilty, (errcode, errtext, newrecord) => {
+            if (errcode) {
+                res.status(errcode).send({
+                    success: false,
+                    error: errtext
+                })
+            } else {
+                res.status(200).send({
+                    success: true,
+                    doctor: newrecord
+                })
+            }
+        })
+
+    }
+})
+
+
+router.post('/doctorlist', (req, res) => {
+    doctorService.list((errcode, errtext, data) => {
+        if (errcode) {
+            res.status(errcode).send({
+                err: errtext
+            })
+        } else {
+            res.status(200).send({
+                doctorlist: data
+            })
+        }
+    })
+})
+
+router.post('/doctordel', (req, res) => {
+    if (req.body.phoneNumber === undefined, req.body.phoneNumber.length === 0) {
+        res.status(400).send({
+            success: false,
+            error: "لطفا فیلد  مورد نظر را صحیح  وکامل پر کنید",
+            text: "  شماره 11 رقم و با 09 شروع شود"
+        })
+    } else {
+        if (privates.verifyPhone(req.body.phoneNumber)) {
+            doctorService.del(req.body.phoneNumber, (errcode, errtext, data) => {
+                if (errcode) {
+                    res.status(errcode).send({
+                        success: false,
+                        err: errtext
+                    })
+                } else {
+                    res.status(200).send({
+                        success: true,
+                        doctor: data
+                    })
+                }
+            })
+        } else {
+            res.status(400).send({
+                success: false,
+                error: "شماره وارد شده اشتباه است"
+            });
+        }
+
+    }
+
+})
+
+module.exports = router
