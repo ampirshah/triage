@@ -2,17 +2,47 @@ import React, { useState } from 'react'
 import { RiHospitalLine } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
 import { toEnglishNumber, toPersianNumber } from '../../helpers/action'
+import Doctor from '../Doctor/Doctor'
 import style from './Login.module.scss'
-//import Container from '../../hoc/Container/Container'
-const Login = () => {
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa'
+import PropTypes from 'prop-types';
+import axios from 'axios'
+
+//import Container from '../../hoc/Container/Container';
+
+// async function loginUser(inputs) {
+   
+
+//     const data=JSON.stringify(inputs);
+//     return await axios.post('http://localhost:4500/doctor/login',data,
+//     {
+//         headers:{
+//             'Content-Type': 'application/json'
+//         }
+//     })
+//     .then(response=>{
+//         console.log("response",response)
+
+//     }).catch(error=>{
+//         console.log("error",error);
+//     })
+    
+// }
+const Login = ({ setToken }) => {
+    const [showPassword, setshowPassword] = useState(false);
     const [info, setInfo] = useState({
         phoneNumber: { value: '', error: '' },
         password: { value: '', error: '' }
     })
+    const togglePasswordHandler = (event) => {
+        event.preventDefault();
+        setshowPassword(!showPassword);
+
+    }
     const inputChangeHandler = (event) => {
         setInfo({
             ...info,
-            [event.target.name]:{value: event.target.value,error:''}
+            [event.target.name]: { value: event.target.value, error: '' }
         })
     }
 
@@ -33,7 +63,7 @@ const Login = () => {
                 setInfo({
                     ...info,
                     phoneNumber: { value: value, error: phoneNumberError },
-                    
+
                 });
                 break;
             case 'password':
@@ -42,20 +72,20 @@ const Login = () => {
                 }
                 setInfo({
                     ...info,
-                    
+
                     password: { value: value, error: passwordError }
                 });
                 break;
-                
+
         }
-        
+
 
     }
     const validationHandler = () => {
         let phoneNumberError = '';
         let passwordError = '';
         let regex = new RegExp('^[0][9][0-9]{9}$');
-        
+
         if (!regex.test(toEnglishNumber(info.phoneNumber.value))) {
             phoneNumberError = "شماره تماس وارد شده صحیح نمی باشد.";
         }
@@ -67,23 +97,30 @@ const Login = () => {
             passwordError = "رمز عبور نمی تواند خالی باشد.";
 
         }
-        
+
         if (phoneNumberError || passwordError) {
             setInfo({
                 ...info,
-                phoneNumber:{error:phoneNumberError},
-                password:{error:passwordError}
+                phoneNumber: { error: phoneNumberError },
+                password: { error: passwordError }
             })
             return false;
         } else return true;
 
     }
-    const loginHandler = (event) => {
+    const submitHandler = async event => {
         event.preventDefault();
         const isValid = validationHandler();
+
         switch (isValid) {
             case true:
                 alert(" خوش آمدید ")
+
+                // const token = loginUser(
+                //     toEnglishNumber(info.phoneNumber.value),
+                //     info.password.value
+                // )
+                // setToken(token);
                 break;
             case false:
                 alert("اطلاعات وارد شده صحیح نمی باشد")
@@ -91,6 +128,7 @@ const Login = () => {
         }
 
     }
+
     console.log("info", info);
     return (
         <div className={style.Login}>
@@ -103,7 +141,7 @@ const Login = () => {
             <div className={style.Content}>
                 <div className={style.LoginBox}>
                     <h3>ورود</h3>
-                    <form onSubmit={(event) => loginHandler(event)}>
+                    <form onSubmit={(event) => submitHandler(event)}>
                         <label>شماره تماس:
                             <input
                                 type='text'
@@ -118,15 +156,20 @@ const Login = () => {
                         </label>
 
                         <label>رمز عبور:
-                            <input
-                                type='text'
-                                name='password'
-                                onChange={(event) => inputChangeHandler(event)}
-                                value={info.password.value}
-                                placeholder='رمز عبور'
-                                onBlur={(event) => blurHandler(event)}
-                                autoComplete='off'
-                            />
+                            {console.log("showPassword", showPassword)}
+                            <div>
+
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    name='password'
+                                    onChange={(event) => inputChangeHandler(event)}
+                                    value={info.password.value}
+                                    placeholder='رمز عبور'
+                                    onBlur={(event) => blurHandler(event)}
+                                    autoComplete='off'
+                                />
+                                <button type='button' onClick={(event) => togglePasswordHandler(event)}>{showPassword ? <FaRegEye /> : <FaRegEyeSlash />}</button>
+                            </div>
                             <p>{info.password.error}</p>
                         </label>
 
@@ -136,6 +179,9 @@ const Login = () => {
             </div>
         </div>
     )
+}
+Login.propTypes = {
+    setToken: PropTypes.func.isRequired
 }
 
 export default Login
