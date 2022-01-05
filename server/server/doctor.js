@@ -2,8 +2,18 @@ const doctor = require("../models/doctor");
 const doctorModel = require("../models/doctor");
 const patientModel = require("../models/patient");
 var ObjectId = require('mongodb').ObjectId;
+let jwt = require('jsonwebtoken');
+let secretKey = "doc"
 let methods = {};
-
+let privates = {
+    tokenGenerator: function (id) {
+        return jwt.sign({
+            id: id,
+            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 2)
+        }
+            , secretKey)
+    }
+};
 methods.add = function (phoneNumber, fullName, specialty, callback) {
     doctorModel.findOne({ phone: phoneNumber }).lean().exec((err, doctor) => {
         // doctorModel.findOne({ phone: phoneNumber }, (err, doctor) => {
@@ -44,7 +54,8 @@ methods.login = function (phoneNumber, callback) {
             callback(500, err)
         } else {
             if (doctor) {
-                callback(null, null)
+                const token = privates.tokenGenerator(doctor._id);
+                callback(null, null,token)
             } else {
                 callback(400, "شماره وارد شده در سیستم ثبت نشده ")
             }
