@@ -27,7 +27,7 @@ const Modal = (props) => {
             Submit = props.submitDoctorHandler;
             Input1 = <label>
                 {dName}
-                <input type='text' onChange={props.inputDoctorHandler} name='name' value={props.changedDoctor.name} autoComplete="off" />
+                <input type='text' onChange={props.inputDoctorHandler} name='fullName' value={props.changedDoctor.fullName} autoComplete="off" />
 
             </label>;
             Input2 = <label>
@@ -89,7 +89,6 @@ const Modal = (props) => {
                                     onClick={() => props.selectDoctorHandler(d)}>{d}</p>
                             </div>
                         })}
-
                     </div>
                 </div>
             </label>

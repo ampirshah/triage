@@ -98,7 +98,7 @@ const Login = () => {
         switch (isValid) {
             case true:
                 const data={
-                    phoneNumber:info.phoneNumber.value,
+                    phoneNumber:toEnglishNumber(info.phoneNumber.value),
                     password:info.password.value
                 }
                 axios.post('http://localhost:4500/doctor/login',data)
@@ -148,7 +148,7 @@ const Login = () => {
                         </label>
 
                         <label>رمز عبور:
-                            {console.log("showPassword", showPassword)}
+                            
                             <div>
 
                                 <input

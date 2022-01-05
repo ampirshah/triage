@@ -7,78 +7,15 @@ import {RiHealthBookLine} from 'react-icons/ri';
 import {MdOutlineSick} from 'react-icons/md';
 import style from './Triage.module.scss';
 import Container from '../../hoc/Container/Container';
-import { searcher, toPersianNumber } from '../../helpers/action';
-import {seracher} from '../../helpers/action'
+
 import Modal from '../../components/Modal/Modal';
 
 const Triage = () => {
     const [isShown, setIsShown] = useState('doctors');
     
-    const testDoctors=[{
-        id:1,
-        name:'ستایش ابویی',
-        phoneNumber:'09908833012',
-        specialty:'پوست و مو',
-    },
-    {
-        id:2,
-        name:'احمد شمس فرد',
-        phoneNumber:'09198038155',
-        specialty:'مغز و اعصاب',
-    },
-    {
-        id:3,
-        name:'ستاره محمدی',
-        phoneNumber:'09111111111',
-        specialty:'دندانپزشک',
-    },
-    {
-        id:4,
-        name:'رضا رضایی',
-        phoneNumber:'09222222222',
-        specialty:'ریه',
-    },
-    {
-        id:5,
-        name:'الهام الهامی',
-        phoneNumber:'09333333333',
-        specialty:'روانپزشک',
-    },
-    {
-        id:6,
-        name:'مریم مریمی',
-        phoneNumber:'09444444444',
-        specialty:'قلب',
-    },
-    {
-        id:7,
-        name:'فلان فلانی',
-        phoneNumber:'09555555555',
-        specialty:'یه چیزی',
-    },
-    {
-        id:8,
-        name:'اصغر اصغری',
-        phoneNumber:'09666666666',
-        specialty:'ارتوپد',
-    },
-    {
-        id:9,
-        name:'مینا مینایی',
-        phoneNumber:'09777777777',
-        specialty:'کبد',
-    },
-    {
-        id:10,
-        name:'احسان احسانی',
-        phoneNumber:'09888888888',
-        specialty:'گوش،حلق و بینی',
-    }
-]
-
     const initialDoctor = {
         id:'',
-        name:'',
+        fullName:'',
         phoneNumber:'',
         specialty:'',
     };
@@ -92,11 +29,17 @@ const Triage = () => {
         isActive:true
     };
     
-    const [doctors, setDoctors] = useState(testDoctors)
+    const [doctors, setDoctors] = useState([])
 
     const [patients,setPatients]=useState([])
 
-    
+    useEffect(() => {
+        axios.get("http://localhost:4500/doctor/list")
+        .then(response=>{
+        console.log("Response",response.data.doctorlist.map(d=>d.phoneNumber));
+        setDoctors(response.data.doctorlist)
+        })
+    }, [])
 
     console.log("doctors", doctors)
     console.log('patients', patients);
@@ -199,15 +142,19 @@ const Triage = () => {
             
         console.log("doctors Changed :", doctors);
         setModalShow({ ...modalShow, show: false })
-        const data = doctors
+        const data = {
+            phoneNumber:changedDoctor.phoneNumber,
+            fullName:changedDoctor.fullName,
+            specialty:changedDoctor.specialty
+        }
         
         console.log("data:", data);
-        axios.post('https://jsonplaceholder.typicode.com/posts', data)
+        axios.post('http://localhost:4500/doctor/add', data)
             .then(response => {
                 console.log("Response", response.data)
                 //setModalShow({ ...modalShow, show: false })
             })
-            .catch(error => console.log("Erorr", error))
+            .catch(error => console.log("Erorr", error.response.data))
 
     }
     
@@ -228,7 +175,7 @@ const Triage = () => {
         const data = patients
         
         console.log("data:", data);
-        axios.post('https://jsonplaceholder.typicode.com/posts', data)
+        axios.post('http://localhost:4500/patient/add', data)
             .then(response => {
                 console.log("Response", response.data)
                 //setModalShow({ ...modalShow, show: false })
@@ -245,14 +192,14 @@ const Triage = () => {
         let SelectedDoctorsList=[];
 
         for (let i in doctors) {
-            DoctorsList.push(doctors[i].name)
+            DoctorsList.push(doctors[i].fullName)
         }
         DoctorsList.sort( (a, b) => a.localeCompare(b, 'fr'));
         
         if(patients[modalShow.index]){
             for(let i in patients[modalShow.index].doctor){
                 if(changedPatient?.doctor[i].selected===true){
-                SelectedDoctorsList.push(patients[modalShow.index].doctor[i].name)
+                SelectedDoctorsList.push(patients[modalShow.index].doctor[i].fullName)
             }
             }
         }

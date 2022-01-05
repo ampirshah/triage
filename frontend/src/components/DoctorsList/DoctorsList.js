@@ -11,13 +11,13 @@ const Doctors = (props) => {
     const TableHandler = () => {
 
         return props.doctors.map((doctor, index) => {
-            const { name, specialty, phoneNumber } = doctor;
+            const { fullName, specialty, phoneNumber } = doctor;
 
             return <tr key={index}>
                 <td>{toPersianNumber(index + 1)}</td>
-                <td>{name}</td>
+                <td>{fullName}</td>
                 <td>{specialty}</td>
-                <td>{phoneNumber}</td>
+                <td>{toPersianNumber(phoneNumber)}</td>
 
 
                 <td className={style.EditButton}>
