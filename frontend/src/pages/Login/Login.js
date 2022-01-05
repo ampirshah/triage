@@ -1,34 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import Cookies from 'js-cookie';
+import style from './Login.module.scss'
 import { RiHospitalLine } from 'react-icons/ri'
+
 import { Link } from 'react-router-dom'
 import { toEnglishNumber, toPersianNumber } from '../../helpers/action'
-import Doctor from '../Doctor/Doctor'
-import style from './Login.module.scss'
+
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa'
-import PropTypes from 'prop-types';
-import axios from 'axios'
 
-//import Container from '../../hoc/Container/Container';
 
-// async function loginUser(inputs) {
-   
+const Login = () => {
 
-//     const data=JSON.stringify(inputs);
-//     return await axios.post('http://localhost:4500/doctor/login',data,
-//     {
-//         headers:{
-//             'Content-Type': 'application/json'
-//         }
-//     })
-//     .then(response=>{
-//         console.log("response",response)
-
-//     }).catch(error=>{
-//         console.log("error",error);
-//     })
-    
-// }
-const Login = ({ setToken }) => {
     const [showPassword, setshowPassword] = useState(false);
     const [info, setInfo] = useState({
         phoneNumber: { value: '', error: '' },
@@ -114,13 +97,22 @@ const Login = ({ setToken }) => {
 
         switch (isValid) {
             case true:
-                alert(" خوش آمدید ")
-
-                // const token = loginUser(
-                //     toEnglishNumber(info.phoneNumber.value),
-                //     info.password.value
-                // )
-                // setToken(token);
+                const data={
+                    phoneNumber:info.phoneNumber.value,
+                    password:info.password.value
+                }
+                axios.post('http://localhost:4500/doctor/login',data)
+                .then(response=>{
+                    console.log("response",response);
+                    alert(" خوش آمدید ");
+                    Cookies.set("token",response.data.token, { expires: 30 })
+                    
+                })
+                .catch(error=>{
+                    console.log("error",error);
+                    //console.log("errorMessage", error.response.data)
+                })
+                
                 break;
             case false:
                 alert("اطلاعات وارد شده صحیح نمی باشد")
@@ -180,8 +172,6 @@ const Login = ({ setToken }) => {
         </div>
     )
 }
-Login.propTypes = {
-    setToken: PropTypes.func.isRequired
-}
+
 
 export default Login
