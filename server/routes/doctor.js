@@ -5,9 +5,16 @@ let persianjs = require("persianjs");
 const doctor = require('../models/doctor');
 let doctorService = require('../server/doctor');
 const pass = require('../passwords/password');
+let jwt = require('jsonwebtoken');
 let privates = {
     verifyPhone: phone => {
         return /^[0][9][0-9]{9}$/.test(phone)
+    },tokenGenerator: function (id) {
+        return jwt.sign({
+            id: id,
+            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 2)
+        }
+            , secretKey)
     }
 };
 
@@ -62,7 +69,7 @@ router.post('/login', (req, res) => {
         })
     } else {
         if (privates.verifyPhone(req.body.phoneNumber)) {
-            doctorService.login(req.body.phoneNumber, (errcode, errtext) => {
+            doctorService.login(req.body.phoneNumber, (errcode, errtext,token) => {
                 if (errcode) {
                     res.status(errcode).send({
                         success: false,
@@ -78,6 +85,7 @@ router.post('/login', (req, res) => {
                         if (pass === req.body.password) {
                             res.status(200).send({
                                 success: true,
+                                token:token,
                                 text: "شماره وارد شده صحیح است"
                             })
                         } else {
