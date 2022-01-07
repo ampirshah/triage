@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 schema = mongoose.Schema
 
 doctorModel = new schema({
-    phone: {
+    phoneNumber: {
         type: String,
         unique: true
     },
