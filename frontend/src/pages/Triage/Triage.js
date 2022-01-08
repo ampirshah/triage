@@ -9,6 +9,7 @@ import style from './Triage.module.scss';
 import Container from '../../hoc/Container/Container';
 
 import Modal from '../../components/Modal/Modal';
+import { toEnglishNumber } from '../../helpers/action';
 
 const Triage = () => {
     const [isShown, setIsShown] = useState('doctors');
@@ -132,30 +133,57 @@ const Triage = () => {
             console.log("working2");
         } 
     }
+const [errorMessage, setErrorMessage] = useState('')
+    const validationHandler = () => {
+        let phoneNumberError = '';
+        
+        let regex = new RegExp('^[0][9][0-9]{9}$');
 
+        if (!regex.test(toEnglishNumber(changedDoctor.phoneNumber))) {
+            phoneNumberError = "شماره تماس وارد شده صحیح نمی باشد.";
+        }
+        if (changedDoctor.phoneNumber === '') {
+            phoneNumberError = "شماره تماس نمی تواند خالی باشد.";
+
+        }
+        if (phoneNumberError) {
+            setErrorMessage(phoneNumberError)
+            return false;
+        } else return true;
+
+    }
+console.log("error",errorMessage);
     const submitDoctorHandler = (event, index) => {
         event.preventDefault();
-            
-            let temp = [...doctors];
-            temp[index]= changedDoctor
-            setDoctors(temp);
-            
-        console.log("doctors Changed :", doctors);
-        setModalShow({ ...modalShow, show: false })
-        const data = {
-            phoneNumber:changedDoctor.phoneNumber,
-            fullName:changedDoctor.fullName,
-            specialty:changedDoctor.specialty
-        }
+            let isValid=validationHandler();
+
+            if(isValid){
+                let temp = [...doctors];
+                temp[index]= changedDoctor
+                setDoctors(temp);
+
+
+                console.log("doctors Changed :", doctors);
+                setModalShow({ ...modalShow, show: false })
+                setErrorMessage('');
+                const data = {
+                phoneNumber:changedDoctor.phoneNumber,
+                fullName:changedDoctor.fullName,
+                specialty:changedDoctor.specialty
+                }
         
-        console.log("data:", data);
-        axios.post('http://localhost:4500/doctor/add', data)
+            console.log("data:", data);
+            axios.post('http://localhost:4500/doctor/add', data)
             .then(response => {
                 console.log("Response", response.data)
                 //setModalShow({ ...modalShow, show: false })
             })
             .catch(error => console.log("Erorr", error.response.data))
 
+            }
+            
+            
+        
     }
     
     const submitPatientHandler =(event,index)=>{
@@ -249,7 +277,7 @@ const Triage = () => {
                                 sortedDoctorsList={sortedDoctorsList()}
                                 searchValue={searchValue}
                                 setSearchValueHandler={(event)=>setSearchValue(event.target.value)}
-
+                                errorMessage={errorMessage}
                                 />
             : null}
 

@@ -97,21 +97,22 @@ const Login = () => {
 
         switch (isValid) {
             case true:
-                const data={
-                    phoneNumber:toEnglishNumber(info.phoneNumber.value),
-                    password:info.password.value
-                }
-                axios.post('http://localhost:4500/doctor/login',data)
-                .then(response=>{
-                    console.log("response",response);
-                    alert(" خوش آمدید ");
-                    Cookies.set("token",response.data.token, { expires: 30 })
+                // const data={
+                //     phoneNumber:toEnglishNumber(info.phoneNumber.value),
+                //     password:info.password.value
+                // }
+                // axios.post('http://localhost:4500/doctor/login',data)
+                // .then(response=>{
+                //     console.log("response",response);
+                //     alert(" خوش آمدید ");
+                //     Cookies.set("token",response.data.token, { expires: 30 })
                     
-                })
-                .catch(error=>{
-                    console.log("error",error);
-                    //console.log("errorMessage", error.response.data)
-                })
+                // })
+                // .catch(error=>{
+                //     console.log("error",error);
+                //     //console.log("errorMessage", error.response.data)
+                // })
+                alert(" خوش آمدید ");
                 
                 break;
             case false:
