@@ -37,6 +37,7 @@ const Modal = (props) => {
             Input3 = <label>
                 {phoneNumber}
                 <input type='text' onChange={props.inputDoctorHandler} name='phoneNumber' value={props.changedDoctor.phoneNumber} autoComplete="off" />
+                <p className={style.ErrorMessage}>{props.errorMessage}</p>
             </label>
 
             break;
