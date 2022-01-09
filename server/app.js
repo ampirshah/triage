@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 const { error } = require('console');
 var doctorRouter = require('./routes/doctor');
 var patientRouter = require('./routes/patient');
+let auth = require('./routes/authentication')
 var testroute = require('./routes/test')
 var cors= require('cors')
 var app = express();
@@ -30,6 +31,7 @@ app.use('/doctor', doctorRouter);
 app.use('/paitent', patientRouter);
 app.use('/test', testroute);
 
+// app.use('/auth', auth);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
