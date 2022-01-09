@@ -40,6 +40,12 @@ const Triage = () => {
         console.log("Response",response.data.doctorlist.map(d=>d.phoneNumber));
         setDoctors(response.data.doctorlist)
         })
+
+        axios.get("http://localhost:4500/patient/list")
+        .then(response=>{
+        console.log("Response",response.data.patientList.map(d=>d.nationalCode));
+        //setPatients(response.data.patientList)
+        })
     }, [])
 
     console.log("doctors", doctors)
@@ -134,28 +140,36 @@ const Triage = () => {
         } 
     }
 const [errorMessage, setErrorMessage] = useState('')
-    const validationHandler = () => {
+    const doctorValidationHandler = () => {
         let phoneNumberError = '';
-        
+        let specialtyError='';
+        let fullNameError='';
         let regex = new RegExp('^[0][9][0-9]{9}$');
 
         if (!regex.test(toEnglishNumber(changedDoctor.phoneNumber))) {
-            phoneNumberError = "شماره تماس وارد شده صحیح نمی باشد.";
+            phoneNumberError = "شماره تماس وارد شده صحیح نمی باشد!";
         }
         if (changedDoctor.phoneNumber === '') {
-            phoneNumberError = "شماره تماس نمی تواند خالی باشد.";
+            phoneNumberError = "شماره تماس نمی تواند خالی باشد!";
 
         }
-        if (phoneNumberError) {
-            setErrorMessage(phoneNumberError)
+        if(changedDoctor.fullName.length===0){
+            fullNameError='نام پزشک نمی تواند خالی باشد!'
+        }
+        if(changedDoctor.specialty.length===0){
+            specialtyError='تخصص نمی تواند خالی باشد!'
+        }
+        if (phoneNumberError ||specialtyError|| fullNameError) {
+            setErrorMessage({fullName:fullNameError,specialty:specialtyError,phoneNumber:phoneNumberError})
             return false;
         } else return true;
 
     }
 console.log("error",errorMessage);
+
     const submitDoctorHandler = (event, index) => {
         event.preventDefault();
-            let isValid=validationHandler();
+            let isValid=doctorValidationHandler();
 
             if(isValid){
                 let temp = [...doctors];
@@ -166,6 +180,7 @@ console.log("error",errorMessage);
                 console.log("doctors Changed :", doctors);
                 setModalShow({ ...modalShow, show: false })
                 setErrorMessage('');
+
                 const data = {
                 phoneNumber:changedDoctor.phoneNumber,
                 fullName:changedDoctor.fullName,
@@ -194,23 +209,58 @@ console.log("error",errorMessage);
             temp[index]= changedPatient;
             temp[index].doctor=changedPatient.doctor.filter(t => (t.selected === true))
             setPatients(temp);
-            
         
+            const data={
+                fullName:changedPatient.name,
+                whichdoctor:changedPatient.doctor,
+                nationalCode:changedPatient.nationalCode
+            }
+        axios.post('http://localhost:4500/patient/add',data)
+            .then(response => {
+                console.log("Response", response)  
+            }).catch(error=>{
+                console.log("error",error)
+            })
 
         console.log("patients Changed :", patients);
         setModalShow({ ...modalShow, show: false })
 
-        const data = patients
+     
+    }
+    console.log("index", modalShow.index)
+
+    const submitChangedDoctorHandler=(event,index)=>{
+        event.preventDefault();
+            let isValid=doctorValidationHandler();
+            console.log("check8",changedDoctor)
+            if(isValid){
+                let temp = [...doctors];
+                temp[index]= changedDoctor
+                setDoctors(temp);
+
+                console.log("doctors Changed :", doctors);
+                setModalShow({ ...modalShow, show: false })
+                setErrorMessage('');
+                const data = {
+                // id:changedDoctor._id,
+                newName:changedDoctor.fullName,
+                newPhoneNumber:changedDoctor.phoneNumber,
+                newSpecialty:changedDoctor.specialty
+                }
         
-        console.log("data:", data);
-        axios.post('http://localhost:4500/patient/add', data)
+            console.log("data:", data);
+            axios.post('http://localhost:4500/doctor/edit', data)
             .then(response => {
                 console.log("Response", response.data)
                 //setModalShow({ ...modalShow, show: false })
             })
-            .catch(error => console.log("Erorr", error))
+            .catch(error => {
+                console.log("Erorr", error)
+                console.log("Erorr", error.response.data)
+            })
+
+            }
     }
-    console.log("index", modalShow.index)
 
     //////Sorting Functions
     
@@ -269,6 +319,7 @@ console.log("error",errorMessage);
                                 changedPatient={changedPatient}
                                 CloseModal={() => setModalShow({ ...modalShow, show: false })}
                                 submitDoctorHandler={(event) => submitDoctorHandler(event, modalShow.index)}
+                                submitChangedDoctorHandler={(event)=>submitChangedDoctorHandler(event,modalShow.index)}
                                 submitPatientHandler={(event)=>submitPatientHandler(event,modalShow.index)}
                                 inputDoctorHandler={(event) => inputDoctorHandler(event,modalShow.index)}
                                 inputPatientHandler={(event) => inputPatientHandler(event,modalShow.index)}

@@ -4,14 +4,15 @@ import Cookies from 'js-cookie';
 import style from './Login.module.scss'
 import { RiHospitalLine } from 'react-icons/ri'
 
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { toEnglishNumber, toPersianNumber } from '../../helpers/action'
 
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa'
+import { IoNavigateSharp } from 'react-icons/io5';
 
 
-const Login = () => {
-
+const Login = (props) => {
+    const navigate=useNavigate();
     const [showPassword, setshowPassword] = useState(false);
     const [info, setInfo] = useState({
         phoneNumber: { value: '', error: '' },
@@ -91,28 +92,29 @@ const Login = () => {
         } else return true;
 
     }
+   
     const submitHandler = async event => {
         event.preventDefault();
         const isValid = validationHandler();
 
         switch (isValid) {
             case true:
-                // const data={
-                //     phoneNumber:toEnglishNumber(info.phoneNumber.value),
-                //     password:info.password.value
-                // }
-                // axios.post('http://localhost:4500/doctor/login',data)
-                // .then(response=>{
-                //     console.log("response",response);
-                //     alert(" خوش آمدید ");
-                //     Cookies.set("token",response.data.token, { expires: 30 })
-                    
-                // })
-                // .catch(error=>{
-                //     console.log("error",error);
-                //     //console.log("errorMessage", error.response.data)
-                // })
-                alert(" خوش آمدید ");
+                const data={
+                    phoneNumber:toEnglishNumber(info.phoneNumber.value),
+                    password:info.password.value
+                }
+                axios.post('http://localhost:4500/doctor/login',data)
+                .then(response=>{
+                    console.log("response",response);
+                    alert(" خوش آمدید ");
+                    Cookies.set("token",response.data.token, { expires: 30 })
+                    Cookies.set("doctor",JSON.stringify(data.phoneNumber))
+                    navigate('/doctor');
+                })
+                .catch(error=>{
+                    console.log("error",error);
+                    console.log("errorMessage", error.response.data)
+                })
                 
                 break;
             case false:
