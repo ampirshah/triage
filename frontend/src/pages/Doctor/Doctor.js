@@ -1,20 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import style from './Doctor.module.scss'
 import Container from '../../hoc/Container/Container';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-function Doctor() {
-    // async function Doctor(credentials) {
-    //     return fetch('http://localhost:8080/login', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(credentials)
-    //     })
-    //         .then(data => data.json())
-    // }
+import {toEnglishNumber} from '../../helpers/action'
+import Cookies from 'js-cookie';
 
+function Doctor() {
+    useEffect(() => {
+        const token=Cookies.get('token')
+        axios.get('http://localhost:4500/doctor/patientList')
+            .then(response => {
+                console.log("response", response);
+            }).catch(error => {
+                console.log("error", error)
+            }
+            )
+    }, [])
     let MenuButtons = <div>
         <li><button>لیست بیماران</button></li>
     </div>

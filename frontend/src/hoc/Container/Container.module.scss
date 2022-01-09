@@ -51,32 +51,39 @@ $sidebar-width: 250px;
             display: flex;
             align-items: center;
             height: 100vh;
-            > button{
+            > button {
                 background-color: $dark-color;
                 position: absolute;
-                z-index: 300;
-                height: 50px;
-                width: 50px;
-                border-radius: 50px;
-                border: 1px solid white;
+                height: 100%;
+                width: 25px;
+                border: none;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
-                z-index: 50;
+                z-index: 38;
             }
             .ShowButton {
-                right: 218px;
-                transition:right 1s ease-in-out;
+                right: 220px;
+                transition: right 1s ease-in-out;
+                .Arrow {
+                    font-size: 22px;
+                    color: white;
+                    transform: rotateY(180deg);
+                    transition: transform 0.5s ease-in-out;
+                }
             }
             .HideButton {
-                right: -10px;
-                transition:right 1s ease-in-out;
+                right: 0px;
+                transition: right 1s ease-in-out;
+                .Arrow {
+                    font-size: 22px;
+                    color: white;
+                    transform: rotateY(0deg);
+                    transition: transform 0.5s ease-in-out;
+                }
             }
-            .Arrow {
-                font-size: 22px;
-                color: white;
-            }
+
             .SideBar {
                 background-color: $dark-color;
                 width: 250px;
@@ -87,7 +94,7 @@ $sidebar-width: 250px;
                 align-items: center;
                 position: static;
                 z-index: 30;
-                transition:width 1s ease-in-out;
+                transition: width 1s ease-in-out;
 
                 div {
                     display: flex;
@@ -96,12 +103,14 @@ $sidebar-width: 250px;
                 }
                 .Menu {
                     margin-top: calc(#{$toolbar-height} + 50px);
-                    width: 100%;
                     display: flex;
                     flex-direction: column;
                     gap: 23px;
-                    text-align: right;
-                    align-items: flex-start;
+                    text-align: center;
+                    align-items: center;
+                    position: absolute;
+                    right: 53px;
+                    width: max-content;
 
                     button {
                         font-family: "IRANSANSWeb";
@@ -129,7 +138,7 @@ $sidebar-width: 250px;
                     }
                 }
             }
-            .HideSideBar{
+            .HideSideBar {
                 background-color: $dark-color;
                 width: 0;
                 height: 100vh;
@@ -139,13 +148,13 @@ $sidebar-width: 250px;
                 align-items: center;
                 position: static;
                 z-index: 30;
-                transition:width 1s ease-in-out;
+                transition: width 1s ease-in-out;
 
-  
-                div{
+                div {
+                    margin-top: calc(#{$toolbar-height} + 50px);
                     display: none;
                 }
-                .Menu{
+                .Menu {
                     display: none;
                 }
             }
@@ -157,6 +166,7 @@ $sidebar-width: 250px;
         }
         li {
             list-style: none;
+            max-height: 30px;
         }
 
         .Content {

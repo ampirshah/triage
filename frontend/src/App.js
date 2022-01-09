@@ -9,21 +9,22 @@ import Login from "./pages/Login/Login";
 import Triage from "./pages/Triage/Triage";
 
 const useAuth = () => {
-  const user = { loggedIn: false };
-  return user && user.loggedIn;
+  const user = Cookies.get('token');
+  if(user){
+    return true
+  }else return false
+  
 }
 function App() {
-
-  const [auth, setAuth] = useState(true)
 
   return (
     <div className={style.App}>
       <Routes>
         <Route path='/' element={<Navigate replace to="/Triage" />} />
         <Route path='/Triage' element={<Triage />} />
-        <Route path='/Login' element={<Login />} />
-        <Route path="/doctor" element={<ProtectedRoutes />} >
-          <Route path='/doctor' element={<Doctor />} />
+        <Route path='/Login' element={<Login useAuth={useAuth}/>} />
+        <Route element={<ProtectedRoutes />} >
+          <Route  path='/doctor' element={<Doctor />} />
         </Route>
       </Routes>
 

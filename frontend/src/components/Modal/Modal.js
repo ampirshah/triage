@@ -17,27 +17,29 @@ const Modal = (props) => {
                 dName = ' نام پزشک جدید:';
                 specialty = ' تخصص:';
                 phoneNumber = '  شماره تماس:'
-
+                Submit = props.submitDoctorHandler;
             } else if (props.modalShow.operation === 'edit') {
                 Title = 'ویرایش اطلاعات پزشک'
                 dName = ' ویرایش نام پزشک:';
                 specialty = ' ویرایش تخصص:';
                 phoneNumber = ' ویرایش شماره تماس:';
+                Submit = props.submitChangedDoctorHandler;
             }
-            Submit = props.submitDoctorHandler;
+            
             Input1 = <label>
                 {dName}
                 <input type='text' onChange={props.inputDoctorHandler} name='fullName' value={props.changedDoctor.fullName} autoComplete="off" />
-
+                <p className={style.ErrorMessage}>{props.errorMessage.fullName}</p>
             </label>;
             Input2 = <label>
                 {specialty}
                 <input type='text' onChange={props.inputDoctorHandler} name='specialty' value={props.changedDoctor.specialty} autoComplete="off" />
+                <p className={style.ErrorMessage}>{props.errorMessage.specialty}</p>
             </label>
             Input3 = <label>
                 {phoneNumber}
                 <input type='text' onChange={props.inputDoctorHandler} name='phoneNumber' value={props.changedDoctor.phoneNumber} autoComplete="off" />
-                <p className={style.ErrorMessage}>{props.errorMessage}</p>
+                <p className={style.ErrorMessage}>{props.errorMessage.phoneNumber}</p>
             </label>
 
             break;
@@ -95,6 +97,7 @@ const Modal = (props) => {
             </label>
             break;
     }
+    console.log("ERRRRORRR",props.errorMessage)
 console.log("showList",showList)
     return (
         <Fragment>
