@@ -9,7 +9,7 @@ let privates = {
     tokenGenerator: function (id) {
         return jwt.sign({
             id: id,
-            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 2)
+            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24)
         }
             , secretKey)
     }
