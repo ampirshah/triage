@@ -28,7 +28,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/doctor', doctorRouter);
-app.use('/paitent', patientRouter);
+app.use('/patient', patientRouter);
 app.use('/test', testroute);
 
 // app.use('/auth', auth);
