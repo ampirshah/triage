@@ -134,12 +134,4 @@ router.post('/edit', (req, res) => {
     }
 })
 
-
-
-
-
-console.log("hhhh");
-console.log(
-    "kkkkk"
-);
 module.exports = router
