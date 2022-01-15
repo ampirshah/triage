@@ -35,7 +35,6 @@ const Doctors = (props) => {
         })
     }
 
-    console.log("length", props.doctors.length);
     return (
         <Fragment>
 

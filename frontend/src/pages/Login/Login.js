@@ -108,7 +108,6 @@ const Login = (props) => {
                     console.log("response",response);
                     alert(" خوش آمدید ");
                     Cookies.set("token",response.data.token, { expires: 30 })
-                    Cookies.set("doctor",JSON.stringify(data.phoneNumber))
                     navigate('/doctor');
                 })
                 .catch(error=>{

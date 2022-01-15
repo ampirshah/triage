@@ -22,7 +22,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Navigate replace to="/Triage" />} />
         <Route path='/Triage' element={<Triage />} />
-        <Route path='/Login' element={<Login useAuth={useAuth}/>} />
+        <Route path='/Login' element={<Login />} />
         <Route element={<ProtectedRoutes />} >
           <Route  path='/doctor' element={<Doctor />} />
         </Route>

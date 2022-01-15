@@ -1,28 +1,17 @@
-const searcher=(list,value)=>{
+const searcher=(list,value,basedOn)=>{
     let result =[];
+    
     let regex=new RegExp(`^${value}.*|^.* ${value}.*`);
    
-        for(let i = 0; i < list.length; i++) {
+        for(let i = 0; i < list?.length; i++) {
             //console.log("regex-test",list[i],value,regex.test(list[i]));
-            if(regex.test(list[i])){
+            if(regex.test(list[i].fullName)){
                 result.push(list[i]);
-            
           }
         }
-        
         //console.log("regex",regex);
         return result;
     
-
-    // let result=[];
-    // for(var i = 0; i < list.length; i++) {
-    //     if(list[i].search(value) > -1){
-    //         result.push(list[i]);
-    //     }
-    //   }
-      
-    //   console.log("regex",regex.test(value));
-    //   return result;
 }
 export { searcher };
 
