@@ -1,10 +1,10 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { Fragment} from 'react';
+
 import style from './DoctorsList.module.scss';
-import Modal from '../Modal/Modal';
+
 import { FiEdit } from 'react-icons/fi';
-import { toPersianNumber } from '../../helpers/action';
 import { IoPersonAddOutline } from 'react-icons/io5'
+import { toPersianNumber } from '../../helpers/action';
 
 const Doctors = (props) => {
 
@@ -56,4 +56,4 @@ const Doctors = (props) => {
     )
 }
 
-export default Doctors
+export default Doctors;

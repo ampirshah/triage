@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
+
 import style from './PatientsList.module.scss';
-import { toPersianNumber } from '../../helpers/action';
-import { FiEdit } from 'react-icons/fi';
 import { IoPersonAddOutline } from 'react-icons/io5';
+import { toPersianNumber } from '../../helpers/action';
 
 
 const PatientsList = (props) => {

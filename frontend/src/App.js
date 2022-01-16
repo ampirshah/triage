@@ -1,7 +1,7 @@
-import Cookies from "js-cookie";
 import * as React from "react";
-import { useState } from "react";
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import Cookies from "js-cookie";
+
 import style from './App.module.scss';
 
 import Doctor from "./pages/Doctor/Doctor";

@@ -1,23 +1,30 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Cookies from 'js-cookie';
+
 import style from './Login.module.scss'
 import { RiHospitalLine } from 'react-icons/ri'
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa'
 
-import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { toEnglishNumber, toPersianNumber } from '../../helpers/action'
 
-import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa'
-import { IoNavigateSharp } from 'react-icons/io5';
-
-
-const Login = (props) => {
+const Login = () => {
     const navigate=useNavigate();
     const [showPassword, setshowPassword] = useState(false);
     const [info, setInfo] = useState({
         phoneNumber: { value: '', error: '' },
-        password: { value: '', error: '' }
+        password: { value: '', error: '' },
+        error:'',
     })
+
+    useEffect(() => {
+       const token=Cookies.get("token");
+       if(token){
+           navigate('/doctor')
+       }
+    }, [])
+
     const togglePasswordHandler = (event) => {
         event.preventDefault();
         setshowPassword(!showPassword);
@@ -56,14 +63,10 @@ const Login = (props) => {
                 }
                 setInfo({
                     ...info,
-
                     password: { value: value, error: passwordError }
                 });
                 break;
-
         }
-
-
     }
     const validationHandler = () => {
         let phoneNumberError = '';
@@ -105,19 +108,19 @@ const Login = (props) => {
                 }
                 axios.post('http://localhost:4500/doctor/login',data)
                 .then(response=>{
-                    console.log("response",response);
-                    alert(" خوش آمدید ");
+                    console.log("Response :Login",response);
                     Cookies.set("token",response.data.token, { expires: 30 })
                     navigate('/doctor');
                 })
                 .catch(error=>{
-                    console.log("error",error);
-                    console.log("errorMessage", error.response.data)
+                    console.log("Error :Login",error);
+                    console.log("errorMessage", error.response.data.error)
+                    setInfo({...info,error:error.response.data.error})
                 })
                 
                 break;
             case false:
-                alert("اطلاعات وارد شده صحیح نمی باشد")
+                setInfo({...info,error:"اطلاعات وارد شده صحیح نمی باشد"})
                 break;
         }
 
@@ -150,9 +153,7 @@ const Login = (props) => {
                         </label>
 
                         <label>رمز عبور:
-                            
                             <div>
-
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     name='password'
@@ -166,7 +167,7 @@ const Login = (props) => {
                             </div>
                             <p>{info.password.error}</p>
                         </label>
-
+                        <p>{info.error}</p>
                         <button type='submit'>ورود</button>
                     </form>
                 </div>

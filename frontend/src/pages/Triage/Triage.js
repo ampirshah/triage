@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'
 import { Link } from 'react-router-dom';
+import axios from 'axios'
+
 import style from './Triage.module.scss';
+import { MdOutlineSick } from 'react-icons/md';
+import { RiHealthBookLine } from 'react-icons/ri';
+
 import DoctorsList from '../../components/DoctorsList/DoctorsList';
 import PatientsList from '../../components/PatientsList/PatientsList';
-import { RiHealthBookLine } from 'react-icons/ri';
-import { MdOutlineSick } from 'react-icons/md';
 import Container from '../../hoc/Container/Container';
 import Modal from '../../components/Modal/Modal';
 import { toEnglishNumber } from '../../helpers/action';
@@ -300,7 +302,6 @@ const Triage = () => {
 
     
     //////Sorted
-
     const sortedDoctorsList = () => {
         let DoctorsList = [];
         let SelectedDoctorsId = [];

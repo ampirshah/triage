@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import style from './Container.module.scss';
+
 import { IoIosArrowBack } from 'react-icons/io'
 import { RiHospitalLine } from 'react-icons/ri';
 import { IoClose } from 'react-icons/io5';
@@ -9,7 +10,7 @@ const Container = (props) => {
     const [showSideBar, setShowSideBar] = useState(true);
     const [showPopUpMessage,setShowPopUpMessage]=useState(false);
     useEffect(() => {
-        if(props.popUpMessage!==''){
+        if(props.popUpMessage===undefined || props.popUpMessage!==''){
             setShowPopUpMessage(true);
             const timer= setTimeout(() => {
                 setShowPopUpMessage(false);
@@ -20,7 +21,9 @@ const Container = (props) => {
         }else setShowPopUpMessage(false);
 
     }, [props.popUpMessage])
+    
     console.log("popUpMessage",props.popUpMessage)
+
     return (
         <div className={style.Container} onClick={()=>setShowPopUpMessage(false)}>
             <div className={style.Toolbar}>
