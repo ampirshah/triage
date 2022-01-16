@@ -230,7 +230,7 @@ methods.patiententer = function (id, turn, callback) {
     })
 }
 
-methods.patiententer = function (id, turn, callback) {
+methods.patientexit = function (id, turn, callback) {
     patientModel.findOne({ turn: turn, 'needTobeVisitBy.status': '1' }).exec((err, patients) => {
         if (err) {
             callback(500, err, null)

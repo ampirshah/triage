@@ -241,7 +241,7 @@ router.get('/patientList', auth(), (req, res) => {
     // }
 })
 
-router.post('/callForPatient', auth(), (req, res) => {
+router.get('/callForPatient', auth(), (req, res) => {
     // if (typeof req.body.id === "undefined" || req.body.id.length === 0) {
     //     res.status(400).send({
     //         success: false,
@@ -265,7 +265,7 @@ router.post('/callForPatient', auth(), (req, res) => {
     // }
 })
 // || typeof req.body.id === 'undefined'
-router.post('/patiententer', auth(), (req, res) => {
+router.get('/patiententer', auth(), (req, res) => {
     if (typeof req.body.turn === 'undefined') {
         res.status(400).send({
             success: false,
@@ -290,7 +290,7 @@ router.post('/patiententer', auth(), (req, res) => {
 
 })
 
-router.post('/patientexit', auth(), (req, res) => {
+router.get('/patientexit', auth(), (req, res) => {
     // || typeof req.body.id === 'undefined'
     if (typeof req.body.turn === 'undefined' ) {
         res.status(400).send({
@@ -298,7 +298,7 @@ router.post('/patientexit', auth(), (req, res) => {
             err: 'فیلد های مورد نظر را بفرستید'
         })
     } else {
-        doctorService.patiententer(req.doctor.id, req.body.turn, (errorcode, errortext, patient) => {
+        doctorService.patientexit(req.doctor.id, req.body.turn, (errorcode, errortext, patient) => {
             if (errorcode) {
                 res.status(errorcode).send({
                     success: false,
