@@ -31,7 +31,7 @@ const Triage = () => {
     }, [changedDoctor])
 
     useEffect(() => {
-        axios.get("http://localhost:4500/paitent/list")
+        axios.get("http://localhost:4500/patient/list")
             .then(response => {
                 console.log("Response :PatientsTable", response.data.patientList.map(p => p.needTobeVisitBy));
                 setPatients(response.data.patientList)
@@ -286,7 +286,7 @@ const Triage = () => {
             const data = {
                 ...changedPatient,
             }
-            axios.post('http://localhost:4500/paitent/add', data)
+            axios.post('http://localhost:4500/patient/add', data)
                 .then(response => {
                     console.log("Response :SubmitPatient", response);
                     setModalShow({ ...modalShow, show: false });

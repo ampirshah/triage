@@ -31,7 +31,7 @@ function Doctor() {
                 setPopUpMessage(error.response.data.error);
             }
             )
-        axios.post('http://localhost:4500/doctor/callForPatient', config)
+        axios.get('http://localhost:4500/doctor/callForPatient', config)
             .then(response => {
                 console.log("Response :callForPatient", response.data);
                
