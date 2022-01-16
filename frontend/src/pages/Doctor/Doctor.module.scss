@@ -1,79 +1,36 @@
-$background-color: #9c88ff;
 $dark-color: #4d4380;
-$toolbar-height:68px;
-
-.Container {
-    h1 {
-        color: $dark-color;
-        margin: 0;
-        padding: 0 20px;
-        font-size: 26px;
+$background-color: #9c88ff;
+$hover-color:#8b8af86b;
+.Doctor {
+    padding: 0 20px;
+    min-width: 50%;
+    margin: 54px 0 0 0;
+    h2{
+        margin-bottom: 5px;
     }
-    .User {
-        margin: 0;
-        padding: 0;
-        font-size: 17px;
-    }
-    .Toolbar {
-        height: 68px;
-        background-color: $background-color;
-        padding: 0 42px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom-right-radius: 25px;
-        border-bottom-left-radius: 25px;
-        position: fixed;
-        left: 0;
-        right: 0;
-    }
-}
-.Dashboard {
-    display: flex;
-    flex-direction: row;
-
-    .Menu {
-        margin-top: calc(#{$toolbar-height} + 40px);
+    table {
+        border-spacing: 0 !important;
+        border-collapse: collapse !important;
         width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 23px;
-        text-align: right;
-        align-items: flex-start;
+        td,
+        th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: rgba($color: $hover-color, $alpha: 0.3);
+        }
+        th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            background-color: $dark-color;
+            color: white;
+        }
+       
     }
-    .SideBar {
-        background-color: $dark-color;
-        width: 250px;
-        height: 100vh;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    ul {
-        margin: 0;
-        padding: 0;
-    }
-    li {
-        list-style: none;
-    }
-    button {
-        font-family: 'IRANSANSWeb';
-        border:none;
-        background-color: transparent;
-        cursor: pointer;
-        color: white;
-        font-size: 18px;
-        width: 100%;
-        padding: 0;
-    }
-    .Content {
-        margin-top: calc(#{$toolbar-height} - 70px) ;
-        display: flex;
-        flex-flow: column;
-        width: 100%;
-        justify-content: center;
-        align-items: center; //?
-    }
+    
+    
 }
