@@ -1,16 +1,19 @@
 $dark-color: #4d4380;
 $background-color: #9c88ff;
+$hover-color: #8b8af86b;
 .Patients {
     padding: 0 20px;
-    min-width: 50%;
     margin: 54px 0 0 0;
-    h2{
+    h2 {
         margin-bottom: 5px;
     }
     table {
         border-spacing: 0 !important;
         border-collapse: collapse !important;
         width: 100%;
+        display: block;
+        max-height: 500px;
+        overflow-y: scroll;
         td,
         th {
             border: 1px solid #ddd;
@@ -20,7 +23,7 @@ $background-color: #9c88ff;
             background-color: #f2f2f2;
         }
         tr:hover {
-            background-color: rgba($color: $background-color, $alpha: 0.3);
+            background-color: rgba($color: $hover-color, $alpha: 0.3);
         }
         th {
             padding-top: 12px;
@@ -44,7 +47,7 @@ $background-color: #9c88ff;
             }
         }
     }
-    .AddButtonContainer{
+    .AddButtonContainer {
         display: flex;
         flex-flow: row-reverse;
         margin: 50px 0 0 0;
@@ -72,11 +75,16 @@ $background-color: #9c88ff;
             }
         }
     }
-    
-    
 }
 @media only screen and (max-width: 650px) {
-    .Patients{
-        display: none;
+    p,
+    td,
+    th {
+        font-size: 13px;
+    }
+}
+@media screen and (max-width:1000px) {
+    td,th{
+        padding: 8px;
     }
 }
