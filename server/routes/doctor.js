@@ -265,7 +265,7 @@ router.get('/callForPatient', auth(), (req, res) => {
     // }
 })
 // || typeof req.body.id === 'undefined'
-router.get('/patiententer', auth(), (req, res) => {
+router.post('/patiententer', auth(), (req, res) => {
     if (typeof req.body.turn === 'undefined') {
         res.status(400).send({
             success: false,
@@ -290,7 +290,7 @@ router.get('/patiententer', auth(), (req, res) => {
 
 })
 
-router.get('/patientexit', auth(), (req, res) => {
+router.post('/patientexit', auth(), (req, res) => {
     // || typeof req.body.id === 'undefined'
     if (typeof req.body.turn === 'undefined' ) {
         res.status(400).send({
