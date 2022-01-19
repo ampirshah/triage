@@ -19,7 +19,7 @@ router.post('/add', (req, res) => {
         req.body.fullName.length === 0 || req.body.whichdoctor.length === 0) {
         res.status(400).send({
             success: false,
-            err: "اسم یا کدملی بیمار وارد نشده است یا موضوع مورد مراجعه ذکر نشده"
+            err: "اسم یا کدملی بیمار وارد نشده یا پزشک مورد نظر ذکر نشده است!"
         })
     } else {
         if (Array.isArray(req.body.whichdoctor)) {
@@ -40,7 +40,7 @@ router.post('/add', (req, res) => {
                 } else {
                     res.status(200).send({
                         success: true,
-                        text: " بیمار اضافه شد"
+                        text: " بیمار جدید اضافه شد!"
                     })
                 }
             })
@@ -54,7 +54,7 @@ router.post('/add', (req, res) => {
                 } else {
                     res.status(200).send({
                         success: true,
-                        text: " بیمار اضافه شد"
+                        text: " بیمار جدید اضافه شد!"
                     })
                 }
             })
