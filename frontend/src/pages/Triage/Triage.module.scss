@@ -1,4 +1,37 @@
 $background-color: #9c88ff;
 $dark-color: #4d4380;
 $toolbar-height: 68px;
-
+.Loading{
+  display: flex;
+  flex-flow: column;
+  gap: 30px;
+  align-items: center;
+  p{
+    color: $dark-color;
+  }
+  .lds-dual-ring {
+    display: inline-block;
+    // width: 80px;
+    height: 80px;
+  }
+  .lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 70px;
+    height: 70px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid $dark-color;
+    border-color: $dark-color transparent $dark-color transparent;
+    animation: lds-dual-ring 1.2s ease-in-out infinite;
+  }
+  @keyframes lds-dual-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+}

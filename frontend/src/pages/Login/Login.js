@@ -45,7 +45,7 @@ const Login = () => {
         switch (name) {
             case 'phoneNumber':
 
-                if (!regex.test(toEnglishNumber(info.phoneNumber.value))) {
+                if (!regex.test(toEnglishNumber(value))) {
                     phoneNumberError = "شماره تماس وارد شده صحیح نمی باشد.";
                 }
                 if (!value) {
@@ -73,14 +73,15 @@ const Login = () => {
         let passwordError = '';
         let regex = new RegExp('^[0][9][0-9]{9}$');
 
-        if (!regex.test(toEnglishNumber(info.phoneNumber.value))) {
-            phoneNumberError = "شماره تماس وارد شده صحیح نمی باشد.";
-        }
-        if (info.phoneNumber.value === '') {
+        if (info.phoneNumber.value===undefined || info.phoneNumber.value === '') {
             phoneNumberError = "شماره تماس نمی تواند خالی باشد.";
 
         }
-        if (info.password.value === '') {
+        else if (!regex.test(toEnglishNumber(info.phoneNumber.value))) {
+            phoneNumberError = "شماره تماس وارد شده صحیح نمی باشد.";
+        }
+       
+        if (info.password.value===undefined || info.password.value === '') {
             passwordError = "رمز عبور نمی تواند خالی باشد.";
 
         }
@@ -100,37 +101,29 @@ const Login = () => {
         event.preventDefault();
         const isValid = validationHandler();
 
-        switch (isValid) {
-            case true:
+        if(isValid) {
                 const data={
                     phoneNumber:toEnglishNumber(info.phoneNumber.value),
                     password:info.password.value
                 }
                 axios.post('http://localhost:4500/doctor/login',data)
                 .then(response=>{
-                    console.log("Response :Login",response);
-                    Cookies.set("token",response.data.token, { expires: 30 })
+                    //console.log("Response :Login",response);
+                    Cookies.set("token",response?.data.token, { expires: 30 })
                     navigate('/doctor');
                 })
                 .catch(error=>{
-                    console.log("Error :Login",error);
-                    console.log("errorMessage", error.response.data.error)
-                    setInfo({...info,error:error.response.data.error})
+                    //console.log("Error :Login",error);
+                    setInfo({...info,error:error.response?.data.error})
                 })
-                
-                break;
-            case false:
-                setInfo({...info,error:"اطلاعات وارد شده صحیح نمی باشد"})
-                break;
-        }
-
+            }
     }
 
     console.log("info", info);
     return (
         <div className={style.Login}>
             <div className={style.Toolbar}>
-                <div className={style.Title}><RiHospitalLine /><h1> نام سایت</h1> </div>
+                <div className={style.Title}><RiHospitalLine /><h1> درمانگاه فلان </h1> </div>
                 <div className={style.Link}>
                     <Link to='/Triage'>تریاژ</Link>
                 </div>
