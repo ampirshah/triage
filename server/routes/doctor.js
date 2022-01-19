@@ -26,7 +26,7 @@ router.post('/add', (req, res) => {
         res.status(400).send({
             success: false,
             error: "لطفا فیلد های مورد نظر را صحیح  وکامل پر کنید",
-            text: " اسم باید از 5 کلمه بیشتر باشد و شماره 11 رقم و با 09 شروع شود"
+            text: " شماره تماس باید 11 رقم باشد و با 09 شروع شود"
         })
     }
     else {
@@ -47,14 +47,14 @@ router.post('/add', (req, res) => {
                 } else {
                     res.status(200).send({
                         success: true,
-                        text: " دکتر جدید اضافه شد"
+                        text: " پزشک جدید اضافه شد"
                     })
                 }
             })
         } else {
             res.status(400).send({
                 success: false,
-                error: "شماره وارد شده اشتباه است"
+                error: "شماره تماس وارد شده اشتباه است"
             });
         }
     }
@@ -265,7 +265,7 @@ router.get('/callForPatient', auth(), (req, res) => {
     // }
 })
 // || typeof req.body.id === 'undefined'
-router.get('/patiententer', auth(), (req, res) => {
+router.post('/patiententer', auth(), (req, res) => {
     if (typeof req.body.turn === 'undefined') {
         res.status(400).send({
             success: false,
@@ -290,7 +290,7 @@ router.get('/patiententer', auth(), (req, res) => {
 
 })
 
-router.get('/patientexit', auth(), (req, res) => {
+router.post('/patientexit', auth(), (req, res) => {
     // || typeof req.body.id === 'undefined'
     if (typeof req.body.turn === 'undefined' ) {
         res.status(400).send({
