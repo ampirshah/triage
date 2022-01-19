@@ -5,12 +5,10 @@ import axios from 'axios'
 import style from './Triage.module.scss';
 import { MdOutlineSick } from 'react-icons/md';
 import { RiHealthBookLine } from 'react-icons/ri';
-
-import DoctorsList from '../../components/DoctorsList/DoctorsList';
-import PatientsList from '../../components/PatientsList/PatientsList';
 import Container from '../../hoc/Container/Container';
 import Modal from '../../components/Modal/Modal';
 import { toEnglishNumber } from '../../helpers/action';
+import List from '../../components/List/List';
 
 const Triage = () => {
     const [isShown, setIsShown] = useState('doctors');
@@ -22,21 +20,34 @@ const Triage = () => {
     const [changedDoctor, setChangedDoctor] = useState()
     const [changedPatient, setChangedPatient] = useState()
 
-    useEffect(() => {
-        axios.get("http://localhost:4500/doctor/list")
-            .then(response => {
-                console.log("Response :DoctorsTable", response.data.doctorlist);
-                setDoctors(response.data.doctorlist)
-            }).catch(error => console.log("Error :DoctorsTable", error.response.data));
-    }, [changedDoctor])
+    const [isLoading, setIsLoading] = useState(true);
+
 
     useEffect(() => {
+
+        axios.get("http://localhost:4500/doctor/list")
+            .then(response => {
+                setIsLoading(false);
+                //console.log("Response :DoctorsTable", response?.data.doctorlist);
+                setDoctors(response.data.doctorlist)
+            }).catch(error => {
+                //console.log("Error :DoctorsTable", error)
+            });
+
+
+    }, [popUpMessage])
+
+    useEffect(() => {
+
         axios.get("http://localhost:4500/patient/list")
             .then(response => {
-                console.log("Response :PatientsTable", response.data.patientList.map(p => p.needTobeVisitBy));
+                setIsLoading(false);
+                //console.log("Response :PatientsTable", response?.data.patientList.map(p => p.needTobeVisitBy));
                 setPatients(response.data.patientList)
-            }).catch(error => console.log("Error :PatientsTable", error.response.data));
-    }, [changedPatient])
+            }).catch(error => {
+                // console.log("Error :PatientsTable", error.response?.data)
+            });
+    }, [popUpMessage])
 
     const [modalShow, setModalShow] = useState({
         index: 0,
@@ -45,11 +56,11 @@ const Triage = () => {
     });
 
 
-    const openEditModal = (person, index) => {
+    const openEditModal = (person) => {
         //console.log("modal", person);
         setSearchValue('');
         setErrorMessage('');
-        setModalShow({ ...modalShow, index: index, show: true, operation: 'edit' });
+        setModalShow({ ...modalShow, show: true, operation: 'edit' });
         setChangedDoctor({ ...person });
         setChangedPatient({ ...person });
 
@@ -86,34 +97,27 @@ const Triage = () => {
             setChangedPatient({
                 ...changedPatient,
                 whichdoctor: [doctorId],
-                //needTobeVisitBy:[{doctor:{fullName:doctorName , selected:true}}]
             });
-            //console.log("select-1", changedPatient)
+            
         }
         else if (changedPatient.whichdoctor && !changedPatient.whichdoctor.some(d => d === doctorId)) {
             let temp = [...changedPatient.whichdoctor];
-            //let temp2=[...changedPatient.needTobeVisitBy]
             temp.push(doctorId)
-            //temp2.push({doctor:{fullName:doctorName , selected:true}})
             setChangedPatient({ ...changedPatient, whichdoctor: temp })
-            //console.log("select-2", changedPatient);
         }
         else if (changedPatient.whichdoctor && changedPatient.whichdoctor.some(d => d === doctorId)) {
             let index = changedPatient.whichdoctor.findIndex(d => d === doctorId);
             let temp = [...changedPatient.whichdoctor];
-            //let temp2=[...changedPatient.needTobeVisitBy];
             temp.splice(index, 1);
-            //temp2.splice(index,1);
             setChangedPatient({ ...changedPatient, whichdoctor: temp })
-            //console.log("select-3", index);
         }
         setSearchValue('');
     }
 
 
     const [errorMessage, setErrorMessage] = useState('')
-    const blurHandler = (event,person) => {
-        let phoneNumberError = '',specialtyError = '',fullNameError = '',nationalCodeError='';
+    const blurHandler = (event, person) => {
+        let phoneNumberError = '', specialtyError = '', fullNameError = '', nationalCodeError = '';
         let regex = new RegExp('^[0][9][0-9]{9}$');
         let { name, value } = event.target;
 
@@ -133,7 +137,7 @@ const Triage = () => {
                 }
                 setErrorMessage({
                     ...errorMessage,
-                    specialty:specialtyError
+                    specialty: specialtyError
                 })
                 break
             case 'phoneNumber':
@@ -150,8 +154,8 @@ const Triage = () => {
                 })
                 break;
             case 'nationalCode':
-                if(value===''){
-                    nationalCodeError='کد ملی نمی تواند خالی باشد!'
+                if (value === '') {
+                    nationalCodeError = 'کد ملی نمی تواند خالی باشد!'
                     setErrorMessage({
                         ...errorMessage,
                         nationalCode: nationalCodeError
@@ -164,25 +168,25 @@ const Triage = () => {
         let specialtyError = '';
         let fullNameError = '';
         let regex = new RegExp('^[0][9][0-9]{9}$');
-        
+
         if (!changedDoctor) {
             phoneNumberError = "شماره تماس نمی تواند خالی باشد!";
             fullNameError = 'نام پزشک نمی تواند خالی باشد!';
             specialtyError = 'تخصص نمی تواند خالی باشد!';
         }
-        else if(changedDoctor){
-            if (changedDoctor.phoneNumber===undefined || changedDoctor.phoneNumber === '' ) {
+        else if (changedDoctor) {
+            if (changedDoctor.phoneNumber === undefined || changedDoctor.phoneNumber === '') {
                 phoneNumberError = "شماره تماس نمی تواند خالی باشد!";
-    
+
             }
             else if (!regex.test(toEnglishNumber(changedDoctor.phoneNumber))) {
                 phoneNumberError = "شماره تماس وارد شده صحیح نمی باشد!";
             }
-    
-            if (changedDoctor.fullName===undefined || changedDoctor.fullName === '') {
+
+            if (changedDoctor.fullName === undefined || changedDoctor.fullName === '') {
                 fullNameError = 'نام پزشک نمی تواند خالی باشد!'
             }
-            if (changedDoctor.specialty===undefined || changedDoctor.specialty === '') {
+            if (changedDoctor.specialty === undefined || changedDoctor.specialty === '') {
                 specialtyError = 'تخصص نمی تواند خالی باشد!'
             }
         }
@@ -197,7 +201,7 @@ const Triage = () => {
 
     const submitDoctorHandler = (event) => {
         event.preventDefault();
-        
+
         let isValid = doctorValidationHandler();
         //console.log("valid",isValid);
         if (isValid) {
@@ -207,16 +211,16 @@ const Triage = () => {
 
             axios.post('http://localhost:4500/doctor/add', data)
                 .then(response => {
-                    console.log("Response :SubmitDoctor", response.data)
+                    //console.log("Response :SubmitDoctor", response.data)
                     setErrorMessage('');
                     setPopUpMessage(response.data.text);
                     setChangedDoctor();
                 })
                 .catch(error => {
-                    console.log("Erorr :SubmitDoctor", error.response.data);
+                    //console.log("Erorr :SubmitDoctor", error.response.data);
                     setPopUpMessage(error.response.data.err);
                 })
-                setModalShow({ ...modalShow, show: false })
+            setModalShow({ ...modalShow, show: false })
         }
 
     }
@@ -224,7 +228,7 @@ const Triage = () => {
         event.preventDefault();
         let isValid = doctorValidationHandler();
         if (isValid) {
-            
+
             const data = {
                 id: changedDoctor._id,
                 newName: changedDoctor.fullName,
@@ -232,45 +236,44 @@ const Triage = () => {
                 newSpecialty: changedDoctor.specialty
             }
 
-            console.log("data:", data);
             axios.post('http://localhost:4500/doctor/edit', data)
                 .then(response => {
-                    console.log("Response :SubmitChangedDoctor", response.data)
-                    setPopUpMessage(response.data.text);
+                    //console.log("Response :SubmitChangedDoctor", response.data)
+                    setPopUpMessage('مشخصات پزشک با موفقیت تغییر کرد.');
                     setChangedDoctor();
                     setErrorMessage('');
                 })
                 .catch(error => {
-                    console.log("Erorr :SubmitChangedDoctor", error.response.data);
+                    //console.log("Erorr :SubmitChangedDoctor", error.response.data);
                     setPopUpMessage(error.response.data.err);
                 })
-                setModalShow({ ...modalShow, show: false }); 
+            setModalShow({ ...modalShow, show: false });
         }
     }
 
-    const patientValidationHandler=()=>{
+    const patientValidationHandler = () => {
         let fullNameError = '';
         let nationalCodeError = '';
         let whichDoctorError = '';
-        
+
         if (!changedPatient) {
             fullNameError = " نام بیمار نمی تواند خالی باشد!";
-            nationalCodeError ='کد ملی نمی تواند خالی باشد!'
+            nationalCodeError = 'کد ملی نمی تواند خالی باشد!'
             whichDoctorError = 'نام پزشک نمی تواند خالی باشد!'
         }
-        if(changedPatient){
-            if (changedPatient.fullName===undefined || changedPatient.fullName === '') {
+        if (changedPatient) {
+            if (changedPatient.fullName === undefined || changedPatient.fullName === '') {
                 fullNameError = " نام بیمار نمی تواند خالی باشد!";
-    
+
             }
-    
-            if ( changedPatient.nationalCode===undefined ||changedPatient.nationalCode === '') {
+
+            if (changedPatient.nationalCode === undefined || changedPatient.nationalCode === '') {
                 nationalCodeError = 'کد ملی نمی تواند خالی باشد!'
             }
-            if (changedPatient.whichdoctor===undefined || changedPatient.whichdoctor.length === 0 ) {
+            if (changedPatient.whichdoctor === undefined || changedPatient.whichdoctor.length === 0) {
                 whichDoctorError = 'نام پزشک نمی تواند خالی باشد!'
             }
-    
+
         }
 
         if (fullNameError || nationalCodeError || whichDoctorError) {
@@ -281,56 +284,70 @@ const Triage = () => {
     }
     const submitPatientHandler = (event) => {
         event.preventDefault();
-        let isValid=patientValidationHandler();
-        if(isValid){
+        let isValid = patientValidationHandler();
+        if (isValid) {
             const data = {
                 ...changedPatient,
             }
             axios.post('http://localhost:4500/patient/add', data)
                 .then(response => {
-                    console.log("Response :SubmitPatient", response);
+                    //console.log("Response :SubmitPatient", response);
                     setModalShow({ ...modalShow, show: false });
                     setChangedPatient();
                     setPopUpMessage(response.data.text);
                 }).catch(error => {
-                    console.log("Error :SubmitPatient", error.response.data)
+                    //console.log("Error :SubmitPatient", error.response.data)
                     setPopUpMessage(error.response.data.err);
                 })
         }
     }
-   
 
-    
-    //////Sorted
+
+
+    //////Sort
     const sortedDoctorsList = () => {
-        let DoctorsList = [];
-        let SelectedDoctorsId = [];
-        let AllDoctorsList = [];
-        for (let i in doctors) {
-            DoctorsList[i] = ([doctors[i]._id, doctors[i].fullName])
-        }
-        DoctorsList.sort((a, b) => a[1].localeCompare(b[1], 'fr'));
-        for (let i in DoctorsList) {
-            AllDoctorsList[i] = { _id: DoctorsList[i][0], fullName: DoctorsList[i][1] };
-        }
-        if (changedPatient && changedPatient?.whichdoctor) {
-            SelectedDoctorsId.push(changedPatient.whichdoctor)
-        }
-        let SelectedDoctorsList = [];
-        for (let i in AllDoctorsList) {
-            changedPatient?.needTobeVisitBy?.map(w => {
-                if (w.doctor._id === AllDoctorsList[i]._id) {
-                    //console.log(AllDoctorsList[i].fullName);
-                    SelectedDoctorsList.push(AllDoctorsList[i])
+
+        const DoctorsList = [...doctors];
+        const SortedNames = DoctorsList.map(d => d.fullName).sort((a, b) => a.localeCompare(b, 'fr'));
+        let whichdoctor = [];
+        SortedNames.map(s => (
+            DoctorsList.map(d => {
+                if (d.fullName === s) {
+                    whichdoctor.push(d._id);
                 }
             })
-        }
-        let FinalDoctors = SelectedDoctorsList.concat(AllDoctorsList.filter(f => !SelectedDoctorsList.includes(f)));
+        ))
 
-        return FinalDoctors;
+        return whichdoctor;
+        // let DoctorsList = [];
+        // let SelectedDoctorsId = [];
+        // let AllDoctorsList = [];
+        // for (let i in doctors) {
+        //     DoctorsList[i] = ([doctors[i]._id, doctors[i].fullName])
+        // }
+        // DoctorsList.sort((a, b) => a[1].localeCompare(b[1], 'fr'));
+        // for (let i in DoctorsList) {
+        //     AllDoctorsList[i] = { _id: DoctorsList[i][0], fullName: DoctorsList[i][1] };
+        // }
+        // if (changedPatient && changedPatient.whichdoctor) {
+        //     SelectedDoctorsId.push(changedPatient.whichdoctor)
+        // }
+        // let SelectedDoctorsList = [];
+        // for (let i in AllDoctorsList) {
+        //     changedPatient?.needTobeVisitBy?.map(w => {
+        //         if (w.doctor._id === AllDoctorsList[i]._id) {
+        //             //console.log(AllDoctorsList[i].fullName);
+        //             SelectedDoctorsList.push(AllDoctorsList[i])
+        //         }
+        //     })
+        // }
+        // let FinalDoctors = SelectedDoctorsList.concat(AllDoctorsList.filter(f => !SelectedDoctorsList.includes(f)));
+
+        // return FinalDoctors;
+
     }
+    ////
 
-    //////////////////////
     const [searchValue, setSearchValue] = useState('');
 
     const toDoctorsTable = () => {
@@ -342,24 +359,24 @@ const Triage = () => {
         setModalShow({ ...modalShow, show: false })
     }
 
-   
+
     let MenuButtons = <div>
         <li><button onClick={() => toDoctorsTable()}><div><RiHealthBookLine /></div>لیست پزشکان </button></li>
         <li><button onClick={() => toPatientsTable()}><div><MdOutlineSick /></div>لیست بیماران</button></li>
     </div>
 
-    let NavLink = <Link to='/Doctor'>پزشک هستید؟</Link>
+    let NavLink = <Link to='/Doctor'>ورود پزشک</Link>
     ///Checking :
-    console.log("doctors", doctors)
-    console.log('patients', patients);
-    console.log("changedDoctor", changedDoctor);
-    console.log("changedPatient", changedPatient);
+    // console.log("doctors", doctors)
+    // console.log('patients', patients);
+    // console.log("changedDoctor", changedDoctor);
+    // console.log("changedPatient", changedPatient);
 
-    console.log("error", errorMessage);
-    console.log("index", modalShow.index);
+    // console.log("error", errorMessage);
+    // console.log("index", modalShow.index);
 
     return (
-        <Container popUpMessage={popUpMessage} clearMessage={()=>setPopUpMessage('')} MenuButtons={MenuButtons} Link={NavLink} Title='تریاژ'>
+        <Container popUpMessage={popUpMessage} clearMessage={() => setPopUpMessage('')} MenuButtons={MenuButtons} Link={NavLink} Title='تریاژ'>
 
             {modalShow.show ? <Modal
                 isShown={isShown}
@@ -383,8 +400,16 @@ const Triage = () => {
             />
                 : null}
 
-            {isShown === 'doctors' ? <DoctorsList doctors={doctors} openEditModal={openEditModal} openAddModal={openAddModal} /> : null}
-            {isShown === 'patients' ? <PatientsList doctors={doctors} patients={patients} modalShow={modalShow} openEditModal={openEditModal} openAddModal={openAddModal} /> : null}
+            {isLoading ?
+                <div className={style.Loading}>
+                    <div className={style['lds-dual-ring']}></div>
+                    <p>لطفا کمی صبر کنید...</p>
+                </div>
+                : <div>
+                    <List isShown={isShown} doctors={doctors} patients={patients} openEditModal={openEditModal} openAddModal={openAddModal} />
+                    {/* {isShown === 'doctors' ? <DoctorsList doctors={doctors} openEditModal={openEditModal} openAddModal={openAddModal} /> : null}
+                    {isShown === 'patients' ? <PatientsList doctors={doctors} patients={patients} modalShow={modalShow} openEditModal={openEditModal} openAddModal={openAddModal} /> : null} */}
+                </div>}
         </Container>
 
     )

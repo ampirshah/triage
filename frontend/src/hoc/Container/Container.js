@@ -5,30 +5,36 @@ import style from './Container.module.scss';
 import { IoIosArrowBack } from 'react-icons/io'
 import { RiHospitalLine } from 'react-icons/ri';
 import { IoClose } from 'react-icons/io5';
-
+import getWindowDimensions from './../../Hooks/getWindowDimensions';
 const Container = (props) => {
     const [showSideBar, setShowSideBar] = useState(true);
-    const [showPopUpMessage,setShowPopUpMessage]=useState(false);
+    const [showPopUpMessage, setShowPopUpMessage] = useState(false);
+    const {height,width}=getWindowDimensions();
+
     useEffect(() => {
-        if(props.popUpMessage===undefined || props.popUpMessage!==''){
+        if (props.popUpMessage === undefined || props.popUpMessage !== '') {
             setShowPopUpMessage(true);
-            const timer= setTimeout(() => {
+            const timer = setTimeout(() => {
                 setShowPopUpMessage(false);
-              }, 3500);
-              setTimeout(()=>props.clearMessage(),4000);
-              return () =>clearTimeout(timer);
-                
-        }else setShowPopUpMessage(false);
+            }, 2500);
+            setTimeout(() => props.clearMessage(), 3000);
+            return () => clearTimeout(timer);
+
+        } else setShowPopUpMessage(false);
 
     }, [props.popUpMessage])
+    useEffect(() => {
+        if(width<=820){
+            setShowSideBar(false)
+        }else setShowSideBar(true);
+    }, [width])
     
-    console.log("popUpMessage",props.popUpMessage)
 
     return (
-        <div className={style.Container} onClick={()=>setShowPopUpMessage(false)}>
+        <div className={style.Container} onClick={() => setShowPopUpMessage(false)}>
             <div className={style.Toolbar}>
                 <div>
-                    <h1><RiHospitalLine /> نام سایت</h1>
+                    <h1><RiHospitalLine /> درمانگاه فلان </h1>
                 </div>
 
                 <div className={style.User} >
@@ -39,7 +45,7 @@ const Container = (props) => {
             </div>
             <div className={style.Dashboard}>
                 <div className={style.SideBarContainer}>
-                    <div className={showSideBar ?style.SideBar:style.HideSideBar}>
+                    <div className={showSideBar ? style.SideBar : style.HideSideBar}>
                         <div>
                             <ul className={style.Menu}>
                                 {props.MenuButtons}
@@ -54,13 +60,15 @@ const Container = (props) => {
                 </div>
 
                 <div className={style.Content}>
-                    
-                    <div className={[(showPopUpMessage ? style.ShowMessage : style.HideMessage),style.Message].join(' ')}>
-                        <p>{props.popUpMessage}<span onClick={()=>setShowPopUpMessage(false)}><IoClose/></span></p>
-                        
-                        </div>
-              
-                    {props.children}
+
+                    <div className={[(showPopUpMessage ? style.ShowMessage : style.HideMessage), style.Message].join(' ')}>
+                        <p>{props.popUpMessage}<span onClick={() => setShowPopUpMessage(false)}><IoClose /></span></p>
+
+                    </div>
+
+                    <div className={style.Children}>
+                        {props.children}
+                    </div>
                 </div>
             </div>
         </div>

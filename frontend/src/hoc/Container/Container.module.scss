@@ -63,25 +63,24 @@ $sidebar-width: 250px;
                 justify-content: center;
                 cursor: pointer;
                 z-index: 38;
+                transition: right 0.3s ease-in-out;
+                
+                .Arrow{
+                    font-size: 22px;
+                    color: white;
+                    transition: transform 0.3s ease-in-out;
+                }
             }
             .ShowButton {
                 right: 220px;
-                transition: right 1s ease-in-out;
                 .Arrow {
-                    font-size: 22px;
-                    color: white;
                     transform: rotateY(180deg);
-                    transition: transform 0.5s ease-in-out;
                 }
             }
             .HideButton {
                 right: 0px;
-                transition: right 1s ease-in-out;
                 .Arrow {
-                    font-size: 22px;
-                    color: white;
                     transform: rotateY(0deg);
-                    transition: transform 0.5s ease-in-out;
                 }
             }
 
@@ -95,8 +94,8 @@ $sidebar-width: 250px;
                 align-items: center;
                 position: static;
                 z-index: 30;
-                transition: width 1s ease-in-out;
-
+                transition: width 0.3s ease-in-out;
+                border-left: 2px solid #ffffff;
                 div {
                     display: flex;
                     flex-direction: column;
@@ -112,7 +111,7 @@ $sidebar-width: 250px;
                     position: absolute;
                     right: 53px;
                     width: max-content;
-                    transition: right 1s ease-in-out;
+                    transition: right 0.3s ease-in-out;
                     button {
                         font-family: "IRANSANSWeb";
                         border: none;
@@ -141,7 +140,7 @@ $sidebar-width: 250px;
             }
             .HideSideBar {
                 background-color: $dark-color;
-                width: 0;
+                width: 10px;
                 height: 100vh;
                 color: white;
                 display: flex;
@@ -149,7 +148,7 @@ $sidebar-width: 250px;
                 align-items: center;
                 position: static;
                 z-index: 30;
-                transition: width 1s ease-in-out;
+                transition: width 0.3s ease-in-out;
                 div {
                     display: flex;
                     flex-direction: column;
@@ -165,7 +164,7 @@ $sidebar-width: 250px;
                     position: absolute;
 
                     width: max-content;
-                    transition: right 1s ease-in-out;
+                    transition: right 0.3s ease-in-out;
                     right: -150px;
                     button {
                         font-family: "IRANSANSWeb";
@@ -212,7 +211,9 @@ $sidebar-width: 250px;
         width: 100%;
         justify-content: center;
         align-items: center;
-        
+        .Children{
+            overflow: auto;
+        }
         .Message {
             position: absolute;
             background-color: $background-color;
@@ -246,15 +247,25 @@ $sidebar-width: 250px;
         }
     }
 }
-@media only screen and (max-width: 650px) {
+@media only screen and (max-width: 700px) {
+    h1{
+        font-size: 17px !important;
+        padding: 0  !important;
+    }
     .SideBar,
     .HideSideBar {
         position: absolute !important;
     }
     .Toolbar {
         position: absolute !important;
+        .User , .User a{
+            font-size: 13px;
+        }
     }
     .Content {
+        >div{
+            margin: auto  !important;
+        }
         justify-content: flex-end !important;
         h2 {
             font-size: 20px;
@@ -262,5 +273,13 @@ $sidebar-width: 250px;
         button {
             font-size: 11px;
         }
+    }
+}
+@media only screen and (max-height: 700px){
+    .Content{
+        display: flex;
+        flex-wrap: wrap;
+        padding-top: 20px;
+        padding-bottom: 20px;
     }
 }

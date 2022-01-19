@@ -37,20 +37,5 @@ const ProtectedRoutes = () => {
   return isAuth ? <Outlet /> : <Navigate to='/Login' />
 }
 
-// const ProtectedRoute = ({ component: Component, ...rest }) => {
-//   const token=Cookies.get("token")
-//   return (
-//       <Route
-//       {...rest}
-//       render={(props) => props.auth ? (
-//         <Component {...props}/>
-//       ) :
-//         (
-//            <Route element={ <Navigate replace to="/Login" />}/>
-//         )
-//       }
-//     />
-//   )
-// }
 
 export default App;

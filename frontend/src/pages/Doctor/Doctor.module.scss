@@ -1,17 +1,20 @@
 $dark-color: #4d4380;
 $background-color: #9c88ff;
-$hover-color:#8b8af86b;
-.Doctor {
+$hover-color: #8b8af86b;
+.PatientList {
     padding: 0 20px;
     min-width: 50%;
     margin: 54px 0 0 0;
-    h2{
+    h2 {
         margin-bottom: 5px;
     }
     table {
         border-spacing: 0 !important;
         border-collapse: collapse !important;
         width: 100%;
+        display: block;
+        max-height: 540px;
+        overflow-y: scroll;
         td,
         th {
             border: 1px solid #ddd;
@@ -29,8 +32,108 @@ $hover-color:#8b8af86b;
             background-color: $dark-color;
             color: white;
         }
-       
     }
-    
-    
+    //Custom ScrollBar
+    ::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: $dark-color;
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: $background-color;
+    }
+}
+.NextPatient {
+    width: 250px;
+    min-width: 170px;
+    .NextPatientInfo {
+        display: flex;
+        flex-flow: column;
+        gap: 14px;
+        h4 {
+            margin-top: 20px;
+            color: $dark-color;
+            border-bottom: 2px solid $dark-color;
+        }
+        span {
+            color: $dark-color;
+            font-weight: bold;
+        }
+        div {
+            line-height: 32px;
+        }
+    }
+    button {
+        border: none;
+        padding: 8px;
+        font-family: "IRANSansWeb";
+        font-size: 15px;
+        background-color: $dark-color;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        margin: 25px 0;
+    }
+}
+
+.Loading {
+    display: flex;
+    flex-flow: column;
+    gap: 30px;
+    align-items: center;
+    p {
+        color: $dark-color;
+    }
+    .lds-dual-ring {
+        display: inline-block;
+        // width: 80px;
+        height: 80px;
+    }
+    .lds-dual-ring:after {
+        content: " ";
+        display: block;
+        width: 70px;
+        height: 70px;
+        margin: 8px;
+        border-radius: 50%;
+        border: 6px solid $dark-color;
+        border-color: $dark-color transparent $dark-color transparent;
+        animation: lds-dual-ring 1.2s ease-in-out infinite;
+    }
+    @keyframes lds-dual-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .PatientList {
+        padding-right: 40px;
+    }
+    .NextPatient {
+        width: 100%;
+    }
+    p,
+    td,
+    th {
+        font-size: 13px;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    td,
+    th {
+        padding: 8px;
+    }
 }
