@@ -25,8 +25,8 @@ router.post('/add', (req, res) => {
         || req.body.phoneNumber.length === 0 || req.body.phoneNumber.length === 0 || req.body.specialty.length === 0) {
         res.status(400).send({
             success: false,
-            error: "لطفا فیلد های مورد نظر را صحیح  وکامل پر کنید",
-            text: " شماره تماس باید 11 رقم باشد و با 09 شروع شود"
+            error: "لطفا فیلد های مورد نظر را صحیح و کامل پر کنید",
+            text: "شماره تماس باید 11 رقم باشد و با 09 شروع شود!"
         })
     }
     else {
@@ -47,14 +47,14 @@ router.post('/add', (req, res) => {
                 } else {
                     res.status(200).send({
                         success: true,
-                        text: " پزشک جدید اضافه شد"
+                        text: "پزشک جدید اضافه شد!"
                     })
                 }
             })
         } else {
             res.status(400).send({
                 success: false,
-                error: "شماره تماس وارد شده اشتباه است"
+                error: "شماره تماس وارد شده اشتباه است!"
             });
         }
     }
@@ -66,7 +66,7 @@ router.post('/login', (req, res) => {
         res.status(400).send({
             success: false,
             error: "لطفا فیلد  مورد نظر را صحیح  وکامل پر کنید",
-            text: "  شماره 11 رقم و با 09 شروع شود"
+            text: "شماره تماس باید 11 رقم باشد و با 09 شروع شود!"
         })
     } else {
         if (privates.verifyPhone(req.body.phoneNumber)) {
@@ -87,12 +87,12 @@ router.post('/login', (req, res) => {
                             res.status(200).send({
                                 success: true,
                                 token: token,
-                                text: "شماره وارد شده صحیح است"
+                                text: "شماره تماس وارد شده صحیح است!"
                             })
                         } else {
                             res.status(400).send({
                                 success: false,
-                                error: "رمز وارد شده صحیح نیست"
+                                error: "رمز وارد شده صحیح نیست!"
                             });
                         }
                     }
@@ -102,7 +102,7 @@ router.post('/login', (req, res) => {
         } else {
             res.status(400).send({
                 success: false,
-                error: "شماره وارد شده اشتباه است"
+                error: "شماره تماس وارد شده اشتباه است!"
             });
         }
     }
@@ -116,7 +116,7 @@ router.post('/edit', (req, res) => {
             req.body.newName.length === 0 || req.body.newSpecialty.length === 0)) {
         res.status(400).send({
             success: false,
-            error: "اطلاعات را کامل وارد کنید",
+            error: "لطفا اطلاعات را کامل وارد کنید!",
         })
     } else {
         doctorService.edit(req.body.id, req.body.newPhoneNumber, req.body.newName, req.body.newSpecialty,
@@ -155,7 +155,7 @@ router.post('/deactive', (req, res) => {
     if (typeof req.body.phoneNumber === "undefined" || req.body.phoneNumber.length === 0) {
         res.status(400).send({
             success: false,
-            error: "لطفا فیلد  مورد نظر را صحیح  وکامل پر کنید",
+            error: "لطفا فیلد  مورد نظر را صحیح و کامل پر کنید",
             text: "  شماره 11 رقم و با 09 شروع شود"
         })
     } else {
@@ -176,7 +176,7 @@ router.post('/deactive', (req, res) => {
         } else {
             res.status(400).send({
                 success: false,
-                error: "شماره وارد شده اشتباه است"
+                error: "شماره تماس وارد شده اشتباه است!"
             });
         }
 
@@ -189,7 +189,7 @@ router.post('/active', (req, res) => {
         res.status(400).send({
             success: false,
             error: "لطفا فیلد  مورد نظر را صحیح  وکامل پر کنید",
-            text: "  شماره 11 رقم و با 09 شروع شود"
+            text: " شماره تماس باید 11 رقم باشد و با 09 شروع شود!"
         })
     } else {
         if (privates.verifyPhone(req.body.phoneNumber)) {
@@ -209,7 +209,7 @@ router.post('/active', (req, res) => {
         } else {
             res.status(400).send({
                 success: false,
-                error: "شماره وارد شده اشتباه است"
+                error: "شماره تماس وارد شده اشتباه است!"
             });
         }
 
