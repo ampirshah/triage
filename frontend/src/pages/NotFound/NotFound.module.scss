@@ -1,0 +1,25 @@
+$dark-color: #4d4380;
+$background-color: #9c88ff;
+.NotFound{
+    padding: 45px;
+    h1{
+        color: $dark-color;
+        margin-bottom: 20px;
+    }
+    ul{
+        line-height: 40px;
+        list-style-type: disclosure-closed;
+        margin-right: 25px;
+        li{
+            
+            a{
+            color: black;
+            text-decoration: none;
+            font-size: 20px;
+            }:hover{
+                color: $background-color;
+            }
+        }
+        
+    }
+}
