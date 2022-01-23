@@ -7,6 +7,7 @@ import style from './App.module.scss';
 import Doctor from "./pages/Doctor/Doctor";
 import Login from "./pages/Login/Login";
 import Triage from "./pages/Triage/Triage";
+import NotFound from "./pages/NotFound/NotFound";
 
 const useAuth = () => {
   const user = Cookies.get('token');
@@ -26,6 +27,7 @@ function App() {
         <Route element={<ProtectedRoutes />} >
           <Route  path='/doctor' element={<Doctor />} />
         </Route>
+        <Route path="*" element={<NotFound/>} />
       </Routes>
 
     </div>
